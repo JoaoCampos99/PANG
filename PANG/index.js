@@ -16,18 +16,14 @@ canvas.width = 900;
 canvas.height = 800;
 
 //Bola vermelha
-function redBall(x, y, r, vel) {
+function redBall(x, y, r,vel) {
   this.x = x;
   this.y = y;
   this.r = r;
-  this.vel = vel;
-  this.k = 0.7; //Elasticidade
-  this.acell = 0.1; //Aceleraçao
-  this.friction = 0.001; //Fricção
-  this.dirX = Math.random() * 2 * Math.PI;
-  this.dirY = Math.random() * 2 * Math.PI;
-  this.vx = Math.cos(this.dirX) * this.vel;
-  this.vy = Math.sin(this.dirY) * this.vel;
+  
+  this.acell = 0.2; //Aceleraçao
+  this.vx = vel;
+  this.vy = vel;
 
   this.draw = function() {
     context.drawImage(
@@ -47,8 +43,6 @@ function redBall(x, y, r, vel) {
 
   this.update = function() {
     this.vy += this.acell;
-    this.vx -= this.vx * this.friction;
-    console.log(this.vx);
     this.y += this.vy;
     this.x += this.vx;
   };
@@ -58,7 +52,7 @@ function redBall(x, y, r, vel) {
       this.vy = -this.k * this.vy;
     }
     if (this.y + this.r > canvas.height) {
-      this.vy = -this.k * this.vy;
+      this.vy *=-1;
       if (this.vy < 1) {
         this.y = canvas.height - this.r;
       }
@@ -74,17 +68,8 @@ function redBall(x, y, r, vel) {
     }
   };
 }
-let newredBall = new redBall(canvas.width / 2, canvas.height / 2, 20, 10);
-//Funções sleep
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+let newredBall = new redBall(canvas.width / 2, canvas.height / 2, 20, 5);
 
-async function demo() {
-  console.log("Taking a break...");
-  await sleep(2000);
-  console.log("Two seconds later");
-}
 
 //Fazer PANG(Jogador)
 let player = new Image();
@@ -96,30 +81,48 @@ let moveRight = false;
 let moveLeft = false;
 let currentFrameRight = 0;
 let currentFrameLeft = 17;
+let count=0
+let facingRight=false;
 function Player(x, y) {
   this.x = x;
   this.y = y;
   this.speed = 0;
   this.draw = function() {
     if (!moveRight && !moveLeft) {
-      context.drawImage(
-        player,
-        205,
-        2,
-        playerWidth,
-        playerHeight,
-        this.x,
-        this.y,
-        playerWidth * 2,
-        playerHeight * 2
-      );
+      if(facingRight){
+        context.drawImage(
+          player,
+          5*(playerWidth+4.1),
+          2,
+          playerWidth,
+          playerHeight,
+          this.x,
+          this.y,
+          playerWidth * 2,
+          playerHeight * 2
+        );
+      }else{
+        context.drawImage(
+          player,
+          16*(playerWidth+4.1),
+          2,
+          playerWidth,
+          playerHeight,
+          this.x,
+          this.y,
+          playerWidth * 2,
+          playerHeight * 2
+        );
+      }
+      
       currentFrameRight = 0;
-      currentFrameLeft = 17;
+      currentFrameLeft = 16;
     }
 
     if (moveRight) {
       moveLeft = false;
-      currentFrameLeft = 17;
+      facingRight=true;
+      currentFrameLeft = 16;
       context.drawImage(
         player,
         currentFrameRight * (playerWidth + 4),
@@ -131,15 +134,20 @@ function Player(x, y) {
         playerWidth * 2,
         playerHeight * 2
       );
-      demo();
-      currentFrameRight++;
-      if (currentFrameRight > 6) {
+      count++;
+      if(count==5){
+
+        currentFrameRight++;
+        count=0
+      }
+      if (currentFrameRight > 4) {
         currentFrameRight = 0;
       }
     }
     //O sprite ir para a esquerda começa em 511
     if (moveLeft) {
       moveRight = false;
+      facingRight=false;
       currentFrameRight = 0;
       context.drawImage(
         player,
@@ -152,11 +160,16 @@ function Player(x, y) {
         playerWidth * 2,
         playerHeight * 2
       );
-      demo();
-      currentFrameLeft--;
+      count++
+      if(count==5){
+
+     
+        currentFrameLeft--;
+        count=0
+      }
 
       if (currentFrameLeft < 12) {
-        currentFrameLeft = 17;
+        currentFrameLeft = 15;
       }
     }
   };
