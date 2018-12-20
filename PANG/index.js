@@ -16,11 +16,11 @@ canvas.width = 900;
 canvas.height = 800;
 
 //Bola vermelha
-function redBall(x, y, r,vel) {
+function redBall(x, y, r, vel) {
   this.x = x;
   this.y = y;
   this.r = r;
-  
+
   this.acell = 0.2; //Aceleraçao
   this.vx = vel;
   this.vy = vel;
@@ -52,7 +52,7 @@ function redBall(x, y, r,vel) {
       this.vy = -this.k * this.vy;
     }
     if (this.y + this.r > canvas.height) {
-      this.vy *=-1;
+      this.vy *= -1;
       if (this.vy < 1) {
         this.y = canvas.height - this.r;
       }
@@ -70,7 +70,6 @@ function redBall(x, y, r,vel) {
 }
 let newredBall = new redBall(canvas.width / 2, canvas.height / 2, 20, 5);
 
-
 //Fazer PANG(Jogador)
 let player = new Image();
 player.src = "assets/pang.png";
@@ -81,18 +80,18 @@ let moveRight = false;
 let moveLeft = false;
 let currentFrameRight = 0;
 let currentFrameLeft = 17;
-let count=0
-let facingRight=false;
+let count = 0;
+let facingRight = false;
 function Player(x, y) {
   this.x = x;
   this.y = y;
   this.speed = 0;
   this.draw = function() {
     if (!moveRight && !moveLeft) {
-      if(facingRight){
+      if (facingRight) {
         context.drawImage(
           player,
-          5*(playerWidth+4.1),
+          5 * (playerWidth + 4.1),
           2,
           playerWidth,
           playerHeight,
@@ -101,10 +100,10 @@ function Player(x, y) {
           playerWidth * 2,
           playerHeight * 2
         );
-      }else{
+      } else {
         context.drawImage(
           player,
-          16*(playerWidth+4.1),
+          16 * (playerWidth + 4.1),
           2,
           playerWidth,
           playerHeight,
@@ -114,14 +113,14 @@ function Player(x, y) {
           playerHeight * 2
         );
       }
-      
+
       currentFrameRight = 0;
       currentFrameLeft = 16;
     }
 
     if (moveRight) {
       moveLeft = false;
-      facingRight=true;
+      facingRight = true;
       currentFrameLeft = 16;
       context.drawImage(
         player,
@@ -135,10 +134,9 @@ function Player(x, y) {
         playerHeight * 2
       );
       count++;
-      if(count==5){
-
+      if (count == 5) {
         currentFrameRight++;
-        count=0
+        count = 0;
       }
       if (currentFrameRight > 4) {
         currentFrameRight = 0;
@@ -147,7 +145,7 @@ function Player(x, y) {
     //O sprite ir para a esquerda começa em 511
     if (moveLeft) {
       moveRight = false;
-      facingRight=false;
+      facingRight = false;
       currentFrameRight = 0;
       context.drawImage(
         player,
@@ -160,12 +158,10 @@ function Player(x, y) {
         playerWidth * 2,
         playerHeight * 2
       );
-      count++
-      if(count==5){
-
-     
+      count++;
+      if (count == 5) {
         currentFrameLeft--;
-        count=0
+        count = 0;
       }
 
       if (currentFrameLeft < 12) {
@@ -181,15 +177,82 @@ function Player(x, y) {
   };
   this.walls = function() {};
 }
+let newPlayer = new Player(canvas.width / 2, canvas.height - playerHeight * 2);
+
+//Fazer arpão
+let shoot = false;
+//Carregar Imagem
+let arpImg = new Image();
+arpImg.src = "./assets/pang2.png";
+//O x e o y vão ser o centro do boneco no a partir do chão
+function arpoon(x, y) {
+  this.x = x;
+  this.y = y;
+  this.speed = 0;
+  this.spritesize = 0;
+  this.draw = function() {
+    if (shoot) {
+      if (facingRight) {
+        context.drawImage(
+          arpImg,
+          18,
+          0,
+          10,
+          this.spritesize,
+          this.x + 5,
+          this.y,
+          10,
+          -this.y - canvas.height
+        );
+      } else {
+        context.drawImage(
+          arpImg,
+          18,
+          0,
+          10,
+          this.spritesize,
+          this.x - 5,
+          this.y,
+          10,
+          -this.y - canvas.height
+        );
+      }
+    }
+
+    // context.drawImage(
+    //   arpImg,
+    //   18,
+    //   0,
+    //   10,
+    //   this.spritesize,
+    //   this.x + 5,
+    //   this.y,
+    //   10,
+    //   -this.y - canvas.height
+    // );
+  };
+  this.update = function() {
+    this.speed = 0;
+    if (shoot) {
+      this.speed = 5;
+      this.y -= this.speed;
+      this.spritesize += this.speed;
+    }
+  };
+}
+
 function ArrowPressed(evt) {
   if (evt.keyCode == 39) moveRight = true;
   if (evt.keyCode == 37) moveLeft = true;
+  if (evt.keyCode == 32) shoot = true;
 }
+
 function ArrowReleased(evt) {
   if (evt.keyCode == 39) moveRight = false;
   if (evt.keyCode == 37) moveLeft = false;
+  if (evt.keyCode == 32) shoot = false;
 }
-let newPlayer = new Player(canvas.width / 2, canvas.height - playerHeight * 2);
+
 let Animate = function() {
   //Atualizar background
   context.drawImage(
@@ -210,6 +273,12 @@ let Animate = function() {
   newPlayer.draw();
   newPlayer.update();
   newPlayer.walls();
+  let newArpoon = new arpoon(
+    newPlayer.x + playerWidth / 2,
+    newPlayer.y + playerHeight
+  );
+  newArpoon.draw();
+  newArpoon.update();
 
   window.addEventListener("keydown", ArrowPressed);
   window.addEventListener("keyup", ArrowReleased);
