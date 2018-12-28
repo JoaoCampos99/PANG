@@ -14,7 +14,8 @@ canvas = document.getElementById("myCanvas");
 context = canvas.getContext("2d");
 canvas.width = 900;
 canvas.height = 800;
-
+//Array de Bolas
+let balls = [];
 //Bola vermelha
 function redBall(x, y, r, vel) {
   this.x = x;
@@ -34,8 +35,8 @@ function redBall(x, y, r, vel) {
       41,
       this.x - this.r,
       this.y - this.r,
-      40,
-      40
+      this.r * 2,
+      this.r * 2
     );
 
     //    context.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
@@ -66,6 +67,21 @@ function redBall(x, y, r, vel) {
     if (this.x + this.r > canvas.width) {
       this.vx *= -1;
     }
+  };
+  this.pop = function() {
+    let redBall1 = new redBall(
+      canvas.width / 2,
+      canvas.height / 2,
+      this.r / 2,
+      vel
+    );
+    let redBall2 = new redBall(
+      canvas.width / 2,
+      canvas.height / 2,
+      this.r / 2,
+      -vel
+    );
+    balls.push(redBall1, redBall2);
   };
 }
 let newredBall = new redBall(canvas.width / 2, canvas.height / 2, 20, 5);
@@ -178,15 +194,15 @@ function Player(x, y) {
   };
   this.walls = function() {
     if (this.x < 0) this.x = 0;
-    if (this.x + playerWidth*2 > canvas.width)
-      this.x = canvas.width - playerWidth*2;
+    if (this.x + playerWidth * 2 > canvas.width)
+      this.x = canvas.width - playerWidth * 2;
   };
 }
 let newPlayer = new Player(canvas.width / 2, canvas.height - playerHeight * 2);
 
 //ARPÃO
 let shoot = false;
-let arrayHarpoons = []
+let arrayHarpoons = [];
 //Carregar Imagem
 let harpImg = new Image();
 harpImg.src = "./assets/pang2.png";
@@ -195,29 +211,37 @@ function Harpoon(x, y) {
   this.x = x;
   this.y = y;
   this.speed = 5;
-  this.height = playerHeight*2;
-  this.state = 0
+  this.height = playerHeight * 2;
+  this.state = 0;
   this.draw = function() {
-    context.drawImage(harpImg,18,0,16,this.height,this.x,this.y,16,this.height)
+    context.drawImage(
+      harpImg,
+      18,
+      0,
+      16,
+      this.height,
+      this.x,
+      this.y,
+      16,
+      this.height
+    );
   };
   this.update = function() {
-    this.y -= this.speed
-    this.height += this.speed
+    this.y -= this.speed;
+    this.height += this.speed;
 
     //colisoes arpão
-    
-
   };
 }
 
 function ArrowPressed(evt) {
   if (evt.keyCode == 39) moveRight = true;
   if (evt.keyCode == 37) moveLeft = true;
-  if (evt.keyCode == 32){
-    let newHarpoon = new Harpoon(newPlayer.x, newPlayer.y)
-    arrayHarpoons.push(newHarpoon)
-  }   
-} 
+  if (evt.keyCode == 32) {
+    let newHarpoon = new Harpoon(newPlayer.x, newPlayer.y);
+    arrayHarpoons.push(newHarpoon);
+  }
+}
 
 function ArrowReleased(evt) {
   if (evt.keyCode == 39) moveRight = false;
@@ -251,9 +275,9 @@ let Animate = function() {
   // );
   // newArpoon.draw();
   // newArpoon.update();
-  for(let i = 0; i< arrayHarpoons.length; i++){
-    arrayHarpoons[i].draw()
-    arrayHarpoons[i].update()
+  for (let i = 0; i < arrayHarpoons.length; i++) {
+    arrayHarpoons[i].draw();
+    arrayHarpoons[i].update();
   }
 
   window.addEventListener("keydown", ArrowPressed);
