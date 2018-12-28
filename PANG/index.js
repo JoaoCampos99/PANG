@@ -175,7 +175,11 @@ function Player(x, y) {
     if (moveRight) this.speed = 5;
     if (moveLeft) this.speed = -5;
   };
-  this.walls = function() {};
+  this.walls = function() {
+    if (this.x < 0) this.x = 0;
+    if (this.x + playerWidth*2 > canvas.width)
+      this.x = canvas.width - playerWidth*2;
+  };
 }
 let newPlayer = new Player(canvas.width / 2, canvas.height - playerHeight * 2);
 
@@ -190,15 +194,17 @@ function Harpoon(x, y) {
   this.x = x;
   this.y = y;
   this.speed = 5;
-  this.height = 0;
+  this.height = playerHeight*2;
+  this.state = 0
   this.draw = function() {
-    context.drawImage(harpImg,18,0,16,this.height+50,this.x,this.y,16,this.height)
+    context.drawImage(harpImg,18,0,16,this.height,this.x,this.y,16,this.height)
   };
   this.update = function() {
     this.y -= this.speed
     this.height += this.speed
 
     //colisoes arpão
+    
 
   };
 }
