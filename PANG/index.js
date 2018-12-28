@@ -215,28 +215,13 @@ function Harpoon(player, x, y) {
   this.height = playerHeight * 2;
   this.state = 0;
   this.draw = function() {
-<<<<<<< HEAD
     context.drawImage(harpImg,18,0,16,this.height,this.x+playerWidth,this.y,16,this.height)
-=======
-    context.drawImage(
-      harpImg,
-      18,
-      0,
-      16,
-      this.height,
-      this.x,
-      this.y,
-      16,
-      this.height
-    );
->>>>>>> 73ead71f8eefcd23e3aa34e91a10cfa16d35b8d1
   };
   this.update = function() {
     this.y -= this.speed;
     this.height += this.speed;
 
     //colisoes arpão
-<<<<<<< HEAD
     //topo canvas
     if(this.y < 0){
       this.player.canFire = true
@@ -244,15 +229,12 @@ function Harpoon(player, x, y) {
     }
     
 
-=======
->>>>>>> 73ead71f8eefcd23e3aa34e91a10cfa16d35b8d1
   };
 }
 
 function ArrowPressed(evt) {
   if (evt.keyCode == 39) moveRight = true;
   if (evt.keyCode == 37) moveLeft = true;
-<<<<<<< HEAD
   if (evt.keyCode == 32){
     if(p1.canFire){
       let harpoonP1 = new Harpoon(p1, p1.x, p1.y)
@@ -261,13 +243,6 @@ function ArrowPressed(evt) {
     }
   }   
 } 
-=======
-  if (evt.keyCode == 32) {
-    let newHarpoon = new Harpoon(newPlayer.x, newPlayer.y);
-    arrayHarpoons.push(newHarpoon);
-  }
-}
->>>>>>> 73ead71f8eefcd23e3aa34e91a10cfa16d35b8d1
 
 function ArrowReleased(evt) {
   if (evt.keyCode == 39) moveRight = false;
@@ -305,14 +280,7 @@ let Animate = function() {
   // );
   // newArpoon.draw();
   // newArpoon.update();
-<<<<<<< HEAD
   
-=======
-  for (let i = 0; i < arrayHarpoons.length; i++) {
-    arrayHarpoons[i].draw();
-    arrayHarpoons[i].update();
-  }
->>>>>>> 73ead71f8eefcd23e3aa34e91a10cfa16d35b8d1
 
   window.addEventListener("keydown", ArrowPressed);
   window.addEventListener("keyup", ArrowReleased);
