@@ -14,7 +14,8 @@ canvas = document.getElementById("myCanvas");
 context = canvas.getContext("2d");
 canvas.width = 900;
 canvas.height = 800;
-
+//Array de Bolas
+let balls = [];
 //Bola vermelha
 function redBall(x, y, r, vel) {
   this.x = x;
@@ -34,8 +35,8 @@ function redBall(x, y, r, vel) {
       41,
       this.x - this.r,
       this.y - this.r,
-      40,
-      40
+      this.r * 2,
+      this.r * 2
     );
 
     //    context.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
@@ -66,6 +67,21 @@ function redBall(x, y, r, vel) {
     if (this.x + this.r > canvas.width) {
       this.vx *= -1;
     }
+  };
+  this.pop = function() {
+    let redBall1 = new redBall(
+      canvas.width / 2,
+      canvas.height / 2,
+      this.r / 2,
+      vel
+    );
+    let redBall2 = new redBall(
+      canvas.width / 2,
+      canvas.height / 2,
+      this.r / 2,
+      -vel
+    );
+    balls.push(redBall1, redBall2);
   };
 }
 let newredBall = new redBall(canvas.width / 2, canvas.height / 2, 20, 5);
@@ -178,15 +194,15 @@ function Player(x, y) {
   };
   this.walls = function() {
     if (this.x < 0) this.x = 0;
-    if (this.x + playerWidth*2 > canvas.width)
-      this.x = canvas.width - playerWidth*2;
+    if (this.x + playerWidth * 2 > canvas.width)
+      this.x = canvas.width - playerWidth * 2;
   };
 }
 let p1 = new Player(canvas.width / 2, canvas.height - playerHeight * 2);
 
 //ARPÃO
 let shoot = false;
-let arrayHarpoons = []
+let arrayHarpoons = [];
 //Carregar Imagem
 let harpImg = new Image();
 harpImg.src = "./assets/pang2.png";
@@ -196,16 +212,31 @@ function Harpoon(player, x, y) {
   this.x = x;
   this.y = y;
   this.speed = 5;
-  this.height = playerHeight*2;
-  this.state = 0
+  this.height = playerHeight * 2;
+  this.state = 0;
   this.draw = function() {
+<<<<<<< HEAD
     context.drawImage(harpImg,18,0,16,this.height,this.x+playerWidth,this.y,16,this.height)
+=======
+    context.drawImage(
+      harpImg,
+      18,
+      0,
+      16,
+      this.height,
+      this.x,
+      this.y,
+      16,
+      this.height
+    );
+>>>>>>> 73ead71f8eefcd23e3aa34e91a10cfa16d35b8d1
   };
   this.update = function() {
-    this.y -= this.speed
-    this.height += this.speed
+    this.y -= this.speed;
+    this.height += this.speed;
 
     //colisoes arpão
+<<<<<<< HEAD
     //topo canvas
     if(this.y < 0){
       this.player.canFire = true
@@ -213,12 +244,15 @@ function Harpoon(player, x, y) {
     }
     
 
+=======
+>>>>>>> 73ead71f8eefcd23e3aa34e91a10cfa16d35b8d1
   };
 }
 
 function ArrowPressed(evt) {
   if (evt.keyCode == 39) moveRight = true;
   if (evt.keyCode == 37) moveLeft = true;
+<<<<<<< HEAD
   if (evt.keyCode == 32){
     if(p1.canFire){
       let harpoonP1 = new Harpoon(p1, p1.x, p1.y)
@@ -227,6 +261,13 @@ function ArrowPressed(evt) {
     }
   }   
 } 
+=======
+  if (evt.keyCode == 32) {
+    let newHarpoon = new Harpoon(newPlayer.x, newPlayer.y);
+    arrayHarpoons.push(newHarpoon);
+  }
+}
+>>>>>>> 73ead71f8eefcd23e3aa34e91a10cfa16d35b8d1
 
 function ArrowReleased(evt) {
   if (evt.keyCode == 39) moveRight = false;
@@ -264,7 +305,14 @@ let Animate = function() {
   // );
   // newArpoon.draw();
   // newArpoon.update();
+<<<<<<< HEAD
   
+=======
+  for (let i = 0; i < arrayHarpoons.length; i++) {
+    arrayHarpoons[i].draw();
+    arrayHarpoons[i].update();
+  }
+>>>>>>> 73ead71f8eefcd23e3aa34e91a10cfa16d35b8d1
 
   window.addEventListener("keydown", ArrowPressed);
   window.addEventListener("keyup", ArrowReleased);
