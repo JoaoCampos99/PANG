@@ -179,73 +179,38 @@ function Player(x, y) {
 }
 let newPlayer = new Player(canvas.width / 2, canvas.height - playerHeight * 2);
 
-//Fazer arpão
+//ARPÃO
 let shoot = false;
+let arrayHarpoons = []
 //Carregar Imagem
-let arpImg = new Image();
-arpImg.src = "./assets/pang2.png";
+let harpImg = new Image();
+harpImg.src = "./assets/pang2.png";
 //O x e o y vão ser o centro do boneco no a partir do chão
-function arpoon(x, y) {
+function Harpoon(x, y) {
   this.x = x;
   this.y = y;
-  this.speed = 0;
-  this.spritesize = 0;
+  this.speed = 5;
+  this.height = 0;
   this.draw = function() {
-    if (shoot) {
-      if (facingRight) {
-        context.drawImage(
-          arpImg,
-          18,
-          0,
-          10,
-          this.spritesize,
-          this.x + 5,
-          this.y,
-          10,
-          -this.y - canvas.height
-        );
-      } else {
-        context.drawImage(
-          arpImg,
-          18,
-          0,
-          10,
-          this.spritesize,
-          this.x - 5,
-          this.y,
-          10,
-          -this.y - canvas.height
-        );
-      }
-    }
-
-    // context.drawImage(
-    //   arpImg,
-    //   18,
-    //   0,
-    //   10,
-    //   this.spritesize,
-    //   this.x + 5,
-    //   this.y,
-    //   10,
-    //   -this.y - canvas.height
-    // );
+    context.drawImage(harpImg,18,0,16,this.height+50,this.x,this.y,16,this.height)
   };
   this.update = function() {
-    this.speed = 0;
-    if (shoot) {
-      this.speed = 5;
-      this.y -= this.speed;
-      this.spritesize += this.speed;
-    }
+    this.y -= this.speed
+    this.height += this.speed
+
+    //colisoes arpão
+
   };
 }
 
 function ArrowPressed(evt) {
   if (evt.keyCode == 39) moveRight = true;
   if (evt.keyCode == 37) moveLeft = true;
-  if (evt.keyCode == 32) shoot = true;
-}
+  if (evt.keyCode == 32){
+    let newHarpoon = new Harpoon(newPlayer.x, newPlayer.y)
+    arrayHarpoons.push(newHarpoon)
+  }   
+} 
 
 function ArrowReleased(evt) {
   if (evt.keyCode == 39) moveRight = false;
@@ -273,12 +238,16 @@ let Animate = function() {
   newPlayer.draw();
   newPlayer.update();
   newPlayer.walls();
-  let newArpoon = new arpoon(
-    newPlayer.x + playerWidth / 2,
-    newPlayer.y + playerHeight
-  );
-  newArpoon.draw();
-  newArpoon.update();
+  // let newArpoon = new arpoon(
+  //   newPlayer.x + playerWidth / 2,
+  //   newPlayer.y + playerHeight
+  // );
+  // newArpoon.draw();
+  // newArpoon.update();
+  for(let i = 0; i< arrayHarpoons.length; i++){
+    arrayHarpoons[i].draw()
+    arrayHarpoons[i].update()
+  }
 
   window.addEventListener("keydown", ArrowPressed);
   window.addEventListener("keyup", ArrowReleased);
