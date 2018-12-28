@@ -141,6 +141,7 @@ function Player(x, y) {
       if (currentFrameRight > 4) {
         currentFrameRight = 0;
       }
+      //HEHE XD
     }
     //O sprite ir para a esquerda começa em 511
     if (moveLeft) {
