@@ -86,6 +86,7 @@ function Player(x, y) {
   this.x = x;
   this.y = y;
   this.speed = 0;
+  this.canFire = true
   this.draw = function() {
     if (!moveRight && !moveLeft) {
       if (facingRight) {
@@ -181,7 +182,7 @@ function Player(x, y) {
       this.x = canvas.width - playerWidth*2;
   };
 }
-let newPlayer = new Player(canvas.width / 2, canvas.height - playerHeight * 2);
+let p1 = new Player(canvas.width / 2, canvas.height - playerHeight * 2);
 
 //ARPÃO
 let shoot = false;
@@ -190,20 +191,26 @@ let arrayHarpoons = []
 let harpImg = new Image();
 harpImg.src = "./assets/pang2.png";
 //O x e o y vão ser o centro do boneco no a partir do chão
-function Harpoon(x, y) {
+function Harpoon(player, x, y) {
+  this.player = player
   this.x = x;
   this.y = y;
   this.speed = 5;
   this.height = playerHeight*2;
   this.state = 0
   this.draw = function() {
-    context.drawImage(harpImg,18,0,16,this.height,this.x,this.y,16,this.height)
+    context.drawImage(harpImg,18,0,16,this.height,this.x+playerWidth,this.y,16,this.height)
   };
   this.update = function() {
     this.y -= this.speed
     this.height += this.speed
 
     //colisoes arpão
+    //topo canvas
+    if(this.y < 0){
+      this.player.canFire = true
+      arrayHarpoons.splice(arrayHarpoons.indexOf(this))
+    }
     
 
   };
@@ -213,8 +220,11 @@ function ArrowPressed(evt) {
   if (evt.keyCode == 39) moveRight = true;
   if (evt.keyCode == 37) moveLeft = true;
   if (evt.keyCode == 32){
-    let newHarpoon = new Harpoon(newPlayer.x, newPlayer.y)
-    arrayHarpoons.push(newHarpoon)
+    if(p1.canFire){
+      let harpoonP1 = new Harpoon(p1, p1.x, p1.y)
+      arrayHarpoons.push(harpoonP1)
+      p1.canFire = false
+    }
   }   
 } 
 
@@ -241,19 +251,20 @@ let Animate = function() {
   newredBall.draw();
   newredBall.update();
   newredBall.walls();
-  newPlayer.draw();
-  newPlayer.update();
-  newPlayer.walls();
+  for(let i = 0; i< arrayHarpoons.length; i++){
+    arrayHarpoons[i].draw()
+    arrayHarpoons[i].update()
+  }
+  p1.draw();
+  p1.update();
+  p1.walls();
   // let newArpoon = new arpoon(
   //   newPlayer.x + playerWidth / 2,
   //   newPlayer.y + playerHeight
   // );
   // newArpoon.draw();
   // newArpoon.update();
-  for(let i = 0; i< arrayHarpoons.length; i++){
-    arrayHarpoons[i].draw()
-    arrayHarpoons[i].update()
-  }
+  
 
   window.addEventListener("keydown", ArrowPressed);
   window.addEventListener("keyup", ArrowReleased);
