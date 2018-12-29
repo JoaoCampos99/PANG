@@ -15,16 +15,17 @@ context = canvas.getContext("2d");
 canvas.width = 900;
 canvas.height = 800;
 //Array de Bolas
-let balls = [];
+let arrayBalls = [];
 //Bola vermelha
-function redBall(x, y, r, vel) {
+function redBall(x, y, r, vx, vy) {
   this.x = x;
   this.y = y;
   this.r = r;
+  this.vx = vx;
+  this.vy = vy;
 
   this.acell = 0.2; //Aceleraçao
-  this.vx = vel;
-  this.vy = vel;
+  
 
   this.draw = function() {
     context.drawImage(
@@ -69,22 +70,18 @@ function redBall(x, y, r, vel) {
     }
   };
   this.pop = function() {
-    let redBall1 = new redBall(
-      canvas.width / 2,
-      canvas.height / 2,
-      this.r / 2,
-      vel
-    );
-    let redBall2 = new redBall(
-      canvas.width / 2,
-      canvas.height / 2,
-      this.r / 2,
-      -vel
-    );
-    balls.push(redBall1, redBall2);
+    if(this.r > 10){
+      
+    let redBall1 = new redBall(this.x+this.r, this.y, this.r * 0.7, 5, -5);
+    let redBall2 = new redBall(this.x-this.r, this.y, this.r * 0.7, -5, -5);
+    arrayBalls.push(redBall1);
+    arrayBalls.push(redBall2)
+    }
+    arrayBalls.splice(arrayBalls.indexOf(this),1)
   };
 }
-let newredBall = new redBall(canvas.width / 2, canvas.height / 2, 20, 5);
+let newredBall = new redBall(canvas.width / 2, canvas.height / 2, 20, 5,5);
+arrayBalls.push(newredBall)
 
 //Fazer PANG(Jogador)
 let player = new Image();
@@ -227,6 +224,15 @@ function Harpoon(player, x, y) {
       this.player.canFire = true
       arrayHarpoons.splice(arrayHarpoons.indexOf(this))
     }
+    //bolas
+    for(let i=0; i<arrayBalls.length; i++){
+      if(this.y <= arrayBalls[i].y+arrayBalls[i].r*2  &&  arrayBalls[i].x+arrayBalls[i].r*2 >= this.x && this.x >= arrayBalls[i].x){
+        this.player.canFire = true
+        arrayHarpoons.splice(arrayHarpoons.indexOf(this))
+        arrayBalls[i].pop()
+        break;
+      }
+    }
     
 
   };
@@ -263,10 +269,13 @@ let Animate = function() {
     canvas.width,
     canvas.height
   );
-
-  newredBall.draw();
-  newredBall.update();
-  newredBall.walls();
+  
+  for(let i=0 ; i< arrayBalls.length; i++){
+    arrayBalls[i].draw()
+    arrayBalls[i].update()
+    arrayBalls[i].walls()
+  }
+ 
   for(let i = 0; i< arrayHarpoons.length; i++){
     arrayHarpoons[i].draw()
     arrayHarpoons[i].update()
@@ -274,13 +283,6 @@ let Animate = function() {
   p1.draw();
   p1.update();
   p1.walls();
-  // let newArpoon = new arpoon(
-  //   newPlayer.x + playerWidth / 2,
-  //   newPlayer.y + playerHeight
-  // );
-  // newArpoon.draw();
-  // newArpoon.update();
-  
 
   window.addEventListener("keydown", ArrowPressed);
   window.addEventListener("keyup", ArrowReleased);
