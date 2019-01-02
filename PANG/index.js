@@ -18,6 +18,38 @@ canvas.height = 600;
 let gameheight = 500;
 //Array de Bolas
 let arrayBalls = [];
+let arrayExplosion = [];
+function Explosion(x, y, width, height) {
+  this.x = x;
+  this.y = y;
+  this.width = width;
+  this.height = height;
+  this.lifespan = 1;
+
+  this.draw = function() {
+    let ballexploding = new Image();
+    ballexploding.src = "assets/baloons.png";
+    if (this.r == 40) {
+      context.drawImage(
+        ballexploding,
+        47 * this.lifespan,
+        0,
+        47,
+        47,
+        this.x - this.r,
+        this.y - this.r,
+        this.r * 2,
+        this.r * 2
+      );
+    }
+  };
+
+  this.update = function() {
+    while (this.lifespan < 5) {
+      this.lifespan++;
+    }
+  };
+}
 //Bola vermelha
 function redBall(x, y, r, vx, vy) {
   this.x = x;
@@ -72,6 +104,13 @@ function redBall(x, y, r, vx, vy) {
   };
   this.pop = function() {
     if (this.r > 10) {
+      let explosion = new Explosion(
+        this.x - this.r,
+        this.y - this.r,
+        this.r * 2,
+        this.r * 2
+      );
+      arrayExplosion.push(explosion);
       let redBall1 = new redBall(this.x + this.r, this.y, this.r * 0.7, 5, -5);
       let redBall2 = new redBall(this.x - this.r, this.y, this.r * 0.7, -5, -5);
       arrayBalls.push(redBall1);
@@ -249,7 +288,7 @@ function Harpoon(player, x, y) {
     //topo canvas
     if (this.y < 0) {
       this.player.canFire = true;
-      arrayHarpoons.splice(arrayHarpoons.indexOf(this),1);
+      arrayHarpoons.splice(arrayHarpoons.indexOf(this), 1);
     }
     //bolas
     for (let i = 0; i < arrayBalls.length; i++) {
@@ -259,7 +298,7 @@ function Harpoon(player, x, y) {
         this.x >= arrayBalls[i].x
       ) {
         this.player.canFire = true;
-        arrayHarpoons.splice(arrayHarpoons.indexOf(this),1);
+        arrayHarpoons.splice(arrayHarpoons.indexOf(this), 1);
         arrayBalls[i].pop();
         this.player.score += 10;
         break;
@@ -372,6 +411,10 @@ let Animate = function() {
   for (let i = 0; i < arrayHarpoons.length; i++) {
     arrayHarpoons[i].draw();
     arrayHarpoons[i].update();
+  }
+  for (let i = 0; i < arrayExplosion.length; i++) {
+    arrayExplosion[i].draw();
+    arrayExplosion[i].update();
   }
   p1.draw();
   p1.update();
