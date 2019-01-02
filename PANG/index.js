@@ -249,7 +249,7 @@ function Harpoon(player, x, y) {
     //topo canvas
     if (this.y < 0) {
       this.player.canFire = true;
-      arrayHarpoons.splice(arrayHarpoons.indexOf(this));
+      arrayHarpoons.splice(arrayHarpoons.indexOf(this),1);
     }
     //bolas
     for (let i = 0; i < arrayBalls.length; i++) {
@@ -259,7 +259,7 @@ function Harpoon(player, x, y) {
         this.x >= arrayBalls[i].x
       ) {
         this.player.canFire = true;
-        arrayHarpoons.splice(arrayHarpoons.indexOf(this));
+        arrayHarpoons.splice(arrayHarpoons.indexOf(this),1);
         arrayBalls[i].pop();
         this.player.score += 10;
         break;
