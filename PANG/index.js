@@ -28,23 +28,33 @@ function Explosion(x, y, width, height) {
   this.width = width;
   this.height = height;
   this.lifespan = 0;
+  this.count = 0;
+  this.right = 3;
   this.draw = function() {
     context.drawImage(
       ballexploding,
-      47,
+      47 * this.right,
       0,
       47,
       47,
-      this.x - this.r,
-      this.y - this.r,
-      this.r * 2,
-      this.r * 2
+      this.x,
+      this.y,
+      this.width,
+      this.height
     );
+    this.count++;
+    if (this.count <= 5) {
+      this.right++;
+    } else {
+      this.right = 3;
+    }
   };
 
   this.update = function() {
-    if (this.lifespan < 5) {
+    if (this.lifespan < 20) {
       this.lifespan++;
+    } else {
+      arrayExplosion.splice(arrayExplosion.indexOf(this), 1);
     }
   };
 }
