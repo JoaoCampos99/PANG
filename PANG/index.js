@@ -16,6 +16,9 @@ context = canvas.getContext("2d");
 canvas.width = 900;
 canvas.height = 600;
 let gameheight = 500;
+
+let ballexploding = new Image();
+ballexploding.src = "./assets/baloons.png";
 //Array de Bolas
 let arrayBalls = [];
 let arrayExplosion = [];
@@ -24,28 +27,23 @@ function Explosion(x, y, width, height) {
   this.y = y;
   this.width = width;
   this.height = height;
-  this.lifespan = 1;
-
+  this.lifespan = 0;
   this.draw = function() {
-    let ballexploding = new Image();
-    ballexploding.src = "assets/baloons.png";
-    if (this.r == 40) {
-      context.drawImage(
-        ballexploding,
-        47 * this.lifespan,
-        0,
-        47,
-        47,
-        this.x - this.r,
-        this.y - this.r,
-        this.r * 2,
-        this.r * 2
-      );
-    }
+    context.drawImage(
+      ballexploding,
+      47,
+      0,
+      47,
+      47,
+      this.x - this.r,
+      this.y - this.r,
+      this.r * 2,
+      this.r * 2
+    );
   };
 
   this.update = function() {
-    while (this.lifespan < 5) {
+    if (this.lifespan < 5) {
       this.lifespan++;
     }
   };
@@ -111,8 +109,8 @@ function redBall(x, y, r, vx, vy) {
         this.r * 2
       );
       arrayExplosion.push(explosion);
-      let redBall1 = new redBall(this.x + this.r, this.y, this.r * 0.7, 5, -5);
-      let redBall2 = new redBall(this.x - this.r, this.y, this.r * 0.7, -5, -5);
+      let redBall1 = new redBall(this.x + this.r, this.y, this.r * 0.5, 5, -5);
+      let redBall2 = new redBall(this.x - this.r, this.y, this.r * 0.5, -5, -5);
       arrayBalls.push(redBall1);
       arrayBalls.push(redBall2);
     }
