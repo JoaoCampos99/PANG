@@ -33,7 +33,7 @@ function Explosion(x, y, width, height) {
   this.draw = function() {
     context.drawImage(
       ballexploding,
-      47 * this.right,
+      49 * this.right,
       0,
       47,
       47,
