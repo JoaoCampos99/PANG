@@ -247,15 +247,14 @@ function Player(x, y) {
       this.x = canvas.width - playerWidth * 2;
   };
   this.ballColision = function() {
-    //Isto esta mal
     for (let i = 0; i < arrayBalls.length; i++) {
       if (
-        arrayBalls[i].x >= this.x.playerWidth * 2 &&
-        arrayBalls[i].y >= this.y
+        this.y <= arrayBalls[i].y + arrayBalls[i].r * 2 &&
+        arrayBalls[i].x + arrayBalls[i].r * 2 >= this.x &&
+        this.x >= arrayBalls[i].x
       ) {
-        console.log("a bola bateu pela direita"); //Remove Live e volta tudo ao inicio
-      } else if (arrayBalls[i] <= this.x && arrayBalls[i].y >= this.y) {
-        console.log("A bola bateu pela esquerda"); //Remove Live e volta tudo ao inicio
+        //Precisa de correçao de calculos
+        console.log("Tocou" + this.x + arrayBalls[i].x);
       }
     }
   };
@@ -430,6 +429,8 @@ let Animate = function() {
   p2.draw();
   p2.update();
   p2.walls();
+  p1.ballColision();
+  p2.ballColision();
   //p1.ballColision(); Not Working
 
   ScoreBoard();
