@@ -436,56 +436,98 @@ function ScoreBoard() {
     );
   }
 }
-let Animate = function() {
-  //Atualizar background
-  if (p1.lives > 0 && p2.lives > 0) {
-    context.drawImage(
-      background,
-      16,
-      16,
-      240,
-      176,
-      0,
-      0,
-      canvas.width,
-      gameheight
-    );
-    for (let i = 0; i < arrayBalls.length; i++) {
-      arrayBalls[i].draw();
-      arrayBalls[i].update();
-      arrayBalls[i].walls();
-    }
+let start = false;
+let multiplayer = false;
+let intro = function() {
+  let intro = new Image();
+  intro.src = "./assets/intro.png";
+  context.drawImage(intro, 0, 0, 384, 240, 0, 0, canvas.width, canvas.height);
+};
 
-    for (let i = 0; i < arrayHarpoons.length; i++) {
-      arrayHarpoons[i].draw();
-      arrayHarpoons[i].update();
-    }
-    for (let i = 0; i < arrayExplosion.length; i++) {
-      arrayExplosion[i].draw();
-      arrayExplosion[i].update();
-    }
-    for (let i = 0; i < playerArray.length; i++) {
-      playerArray[i].draw();
-      playerArray[i].update();
-      playerArray[i].walls();
-      playerArray[i].ballColision();
-    }
-    ScoreBoard();
+let startmenu = function() {
+  let startmenu = new Image();
+  startmenu.src = "./assets/startmenu.png";
+  context.drawImage(
+    startmenu,
+    0,
+    0,
+    240,
+    210,
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+};
+let count = 0;
+let Animate = function() {
+  count++;
+  if (count < 100) {
+    intro();
   } else {
-    context.drawImage(
-      gameover,
-      0,
-      0,
-      266,
-      200,
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-    lost = true;
+    startmenu();
   }
 
+  if (start == true) {
+    //Atualizar background
+    if (p1.lives > 0 && p2.lives > 0) {
+      context.drawImage(
+        background,
+        16,
+        16,
+        240,
+        176,
+        0,
+        0,
+        canvas.width,
+        gameheight
+      );
+      for (let i = 0; i < arrayBalls.length; i++) {
+        arrayBalls[i].draw();
+        arrayBalls[i].update();
+        arrayBalls[i].walls();
+      }
+
+      for (let i = 0; i < arrayHarpoons.length; i++) {
+        arrayHarpoons[i].draw();
+        arrayHarpoons[i].update();
+      }
+      for (let i = 0; i < arrayExplosion.length; i++) {
+        arrayExplosion[i].draw();
+        arrayExplosion[i].update();
+      }
+      for (let i = 0; i < playerArray.length; i++) {
+        playerArray[i].draw();
+        playerArray[i].update();
+        playerArray[i].walls();
+        playerArray[i].ballColision();
+      }
+      ScoreBoard();
+    } else {
+      context.drawImage(
+        gameover,
+        0,
+        0,
+        266,
+        200,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+      lost = true;
+    }
+  }
+  window.addEventListener("mousedown", function(evt) {
+    var x = evt.pageX - canvas.offsetLeft;
+    var y = evt.pageY - canvas.offsetTop;
+
+    if (x >= 305 || x <= 600) {
+      if (y >= 457 || y <= 484) {
+        start = true;
+      }
+    }
+  });
   window.addEventListener("keydown", ArrowPressed);
   window.addEventListener("keyup", ArrowReleased);
   window.requestAnimationFrame(Animate);
