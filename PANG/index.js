@@ -156,71 +156,96 @@ function Player(x, y) {
   this.hitted = false;
 
   this.draw = function() {
-    if (!this.hitted) {
-      if (!this.moveRight && !this.moveLeft) {
-        if (this.facingRight) {
-          context.drawImage(
-            player,
-            5 * (playerWidth + 4.1),
-            2,
-            playerWidth,
-            playerHeight,
-            this.x,
-            this.y,
-            playerWidth * 2,
-            playerHeight * 2
-          );
-        } else {
-          context.drawImage(
-            player,
-            16 * (playerWidth + 4.1),
-            2,
-            playerWidth,
-            playerHeight,
-            this.x,
-            this.y,
-            playerWidth * 2,
-            playerHeight * 2
-          );
-        }
+    if (this.lives > 0) {
+      if (!this.hitted) {
+        if (!this.moveRight && !this.moveLeft) {
+          if (this.facingRight) {
+            context.drawImage(
+              player,
+              5 * (playerWidth + 4.1),
+              2,
+              playerWidth,
+              playerHeight,
+              this.x,
+              this.y,
+              playerWidth * 2,
+              playerHeight * 2
+            );
+          } else {
+            context.drawImage(
+              player,
+              16 * (playerWidth + 4.1),
+              2,
+              playerWidth,
+              playerHeight,
+              this.x,
+              this.y,
+              playerWidth * 2,
+              playerHeight * 2
+            );
+          }
 
-        this.Right = 0;
-        this.Left = 16;
-      }
-
-      if (this.moveRight) {
-        this.moveLeft = false;
-        this.facingRight = true;
-        this.Left = 16;
-        context.drawImage(
-          player,
-          this.Right * (playerWidth + 4),
-          2,
-          playerWidth,
-          playerHeight,
-          this.x,
-          this.y,
-          playerWidth * 2,
-          playerHeight * 2
-        );
-        this.count++;
-        if (this.count == 5) {
-          this.Right++;
-          this.count = 0;
-        }
-        if (this.Right > 4) {
           this.Right = 0;
+          this.Left = 16;
         }
-      }
-      //O sprite ir para a esquerda começa em 511
-      if (this.moveLeft) {
-        this.moveRight = false;
-        this.facingRight = false;
-        this.Right = 0;
+
+        if (this.moveRight) {
+          this.moveLeft = false;
+          this.facingRight = true;
+          this.Left = 16;
+          context.drawImage(
+            player,
+            this.Right * (playerWidth + 4),
+            2,
+            playerWidth,
+            playerHeight,
+            this.x,
+            this.y,
+            playerWidth * 2,
+            playerHeight * 2
+          );
+          this.count++;
+          if (this.count == 5) {
+            this.Right++;
+            this.count = 0;
+          }
+          if (this.Right > 4) {
+            this.Right = 0;
+          }
+        }
+        //O sprite ir para a esquerda começa em 511
+        if (this.moveLeft) {
+          this.moveRight = false;
+          this.facingRight = false;
+          this.Right = 0;
+          context.drawImage(
+            player,
+            this.Left * (playerWidth + 4),
+            2,
+            playerWidth,
+            playerHeight,
+            this.x,
+            this.y,
+            playerWidth * 2,
+            playerHeight * 2
+          );
+          this.count++;
+          if (this.count == 5) {
+            this.Left--;
+            this.count = 0;
+          }
+
+          if (this.Left < 12) {
+            this.Left = 15;
+          }
+        }
+      } else {
+        let falling = new Image();
+        falling.src = "./assets/pang.png";
         context.drawImage(
-          player,
-          this.Left * (playerWidth + 4),
-          2,
+          falling,
+          335,
+          0,
           playerWidth,
           playerHeight,
           this.x,
@@ -228,38 +253,17 @@ function Player(x, y) {
           playerWidth * 2,
           playerHeight * 2
         );
-        this.count++;
-        if (this.count == 5) {
-          this.Left--;
-          this.count = 0;
-        }
-
-        if (this.Left < 12) {
-          this.Left = 15;
-        }
       }
-    } else {
-      let falling = new Image();
-      falling.src = "./assets/pang.png";
-      context.drawImage(
-        falling,
-        335,
-        0,
-        playerWidth,
-        playerHeight,
-        this.x,
-        this.y,
-        playerWidth * 2,
-        playerHeight * 2
-      );
     }
   };
   this.update = function() {
-    if (!this.hitted) {
-      this.x += this.speed;
-      this.speed = 0;
-      if (this.moveRight) this.speed = 5;
-      if (this.moveLeft) this.speed = -5;
+    if (this.lives > 0) {
+      if (!this.hitted) {
+        this.x += this.speed;
+        this.speed = 0;
+        if (this.moveRight) this.speed = 5;
+        if (this.moveLeft) this.speed = -5;
+      }
     }
   };
   this.walls = function() {
@@ -341,27 +345,31 @@ function Harpoon(player, x, y) {
   };
 }
 
-let lost = false;
+let lost = false; //Able Restart Press (R)
 
 function ArrowPressed(evt) {
   if (evt.keyCode == 68) p1.moveRight = true; //P1
   if (evt.keyCode == 65) p1.moveLeft = true; //P1
   if (evt.keyCode == 32) {
     //P1
-    if (p1.canFire) {
-      let harpoonP1 = new Harpoon(p1, p1.x, p1.y);
-      arrayHarpoons.push(harpoonP1);
-      p1.canFire = false;
+    if (p1.lives > 0) {
+      if (p1.canFire) {
+        let harpoonP1 = new Harpoon(p1, p1.x, p1.y);
+        arrayHarpoons.push(harpoonP1);
+        p1.canFire = false;
+      }
     }
   }
   //Player 2 Commands
   if (evt.keyCode == 39) p2.moveRight = true;
   if (evt.keyCode == 37) p2.moveLeft = true;
   if (evt.keyCode == 16) {
-    if (p2.canFire) {
-      let harpoonP2 = new Harpoon(p2, p2.x, p2.y);
-      arrayHarpoons.push(harpoonP2);
-      p2.canFire = false;
+    if (p2.lives > 0) {
+      if (p2.canFire) {
+        let harpoonP2 = new Harpoon(p2, p2.x, p2.y);
+        arrayHarpoons.push(harpoonP2);
+        p2.canFire = false;
+      }
     }
   }
 
@@ -438,11 +446,6 @@ function ScoreBoard() {
 }
 let start = false;
 let multiplayer = false;
-let intro = function() {
-  let intro = new Image();
-  intro.src = "./assets/intro.png";
-  context.drawImage(intro, 0, 0, 384, 240, 0, 0, canvas.width, canvas.height);
-};
 
 let startmenu = function() {
   let startmenu = new Image();
@@ -459,18 +462,12 @@ let startmenu = function() {
     canvas.height
   );
 };
-let count = 0;
 let Animate = function() {
-  count++;
-  if (count < 100) {
-    intro();
-  } else {
-    startmenu();
-  }
+  startmenu();
 
   if (start == true) {
     //Atualizar background
-    if (p1.lives > 0 && p2.lives > 0) {
+    if (p1.lives > 0 || p2.lives > 0) {
       context.drawImage(
         background,
         16,
@@ -518,12 +515,12 @@ let Animate = function() {
       lost = true;
     }
   }
-  window.addEventListener("mousedown", function(evt) {
+  canvas.addEventListener("mousedown", function(evt) {
     var x = evt.pageX - canvas.offsetLeft;
     var y = evt.pageY - canvas.offsetTop;
 
-    if (x >= 305 || x <= 600) {
-      if (y >= 457 || y <= 484) {
+    if (x >= 305 && x <= 600) {
+      if (y >= 457 && y <= 484) {
         start = true;
       }
     }
