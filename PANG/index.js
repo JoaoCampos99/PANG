@@ -372,6 +372,7 @@ function ArrowPressed(evt) {
       p1.score = 0;
       p2.lives = 3;
       p2.score = 0;
+      lost = false;
     }
   }
 }
