@@ -16,7 +16,9 @@ context = canvas.getContext("2d");
 canvas.width = 900;
 canvas.height = 600;
 let gameheight = 500;
-
+//GameOVER SCREEN
+let gameover = new Image();
+gameover.src = "./assets/gameover.jpg";
 let ballexploding = new Image();
 ballexploding.src = "./assets/baloons.png";
 //Array de Bolas
@@ -151,72 +153,98 @@ function Player(x, y) {
   this.count = 0;
   this.lives = 3;
   this.score = 0;
+  this.hitted = false;
 
   this.draw = function() {
-    if (!this.moveRight && !this.moveLeft) {
-      if (this.facingRight) {
-        context.drawImage(
-          player,
-          5 * (playerWidth + 4.1),
-          2,
-          playerWidth,
-          playerHeight,
-          this.x,
-          this.y,
-          playerWidth * 2,
-          playerHeight * 2
-        );
-      } else {
-        context.drawImage(
-          player,
-          16 * (playerWidth + 4.1),
-          2,
-          playerWidth,
-          playerHeight,
-          this.x,
-          this.y,
-          playerWidth * 2,
-          playerHeight * 2
-        );
-      }
+    if (!this.hitted) {
+      if (!this.moveRight && !this.moveLeft) {
+        if (this.facingRight) {
+          context.drawImage(
+            player,
+            5 * (playerWidth + 4.1),
+            2,
+            playerWidth,
+            playerHeight,
+            this.x,
+            this.y,
+            playerWidth * 2,
+            playerHeight * 2
+          );
+        } else {
+          context.drawImage(
+            player,
+            16 * (playerWidth + 4.1),
+            2,
+            playerWidth,
+            playerHeight,
+            this.x,
+            this.y,
+            playerWidth * 2,
+            playerHeight * 2
+          );
+        }
 
-      this.Right = 0;
-      this.Left = 16;
-    }
-
-    if (this.moveRight) {
-      this.moveLeft = false;
-      this.facingRight = true;
-      this.Left = 16;
-      context.drawImage(
-        player,
-        this.Right * (playerWidth + 4),
-        2,
-        playerWidth,
-        playerHeight,
-        this.x,
-        this.y,
-        playerWidth * 2,
-        playerHeight * 2
-      );
-      this.count++;
-      if (this.count == 5) {
-        this.Right++;
-        this.count = 0;
-      }
-      if (this.Right > 4) {
         this.Right = 0;
+        this.Left = 16;
       }
-    }
-    //O sprite ir para a esquerda começa em 511
-    if (this.moveLeft) {
-      this.moveRight = false;
-      this.facingRight = false;
-      this.Right = 0;
+
+      if (this.moveRight) {
+        this.moveLeft = false;
+        this.facingRight = true;
+        this.Left = 16;
+        context.drawImage(
+          player,
+          this.Right * (playerWidth + 4),
+          2,
+          playerWidth,
+          playerHeight,
+          this.x,
+          this.y,
+          playerWidth * 2,
+          playerHeight * 2
+        );
+        this.count++;
+        if (this.count == 5) {
+          this.Right++;
+          this.count = 0;
+        }
+        if (this.Right > 4) {
+          this.Right = 0;
+        }
+      }
+      //O sprite ir para a esquerda começa em 511
+      if (this.moveLeft) {
+        this.moveRight = false;
+        this.facingRight = false;
+        this.Right = 0;
+        context.drawImage(
+          player,
+          this.Left * (playerWidth + 4),
+          2,
+          playerWidth,
+          playerHeight,
+          this.x,
+          this.y,
+          playerWidth * 2,
+          playerHeight * 2
+        );
+        this.count++;
+        if (this.count == 5) {
+          this.Left--;
+          this.count = 0;
+        }
+
+        if (this.Left < 12) {
+          this.Left = 15;
+        }
+      }
+    } else {
+      let falling = new Image();
+      falling.src = "./assets/pang.png";
       context.drawImage(
-        player,
-        this.Left * (playerWidth + 4),
-        2,
+        falling,
+        335,
+        0,
         playerWidth,
         playerHeight,
         this.x,
@@ -224,22 +252,15 @@ function Player(x, y) {
         playerWidth * 2,
         playerHeight * 2
       );
-      this.count++;
-      if (this.count == 5) {
-        this.Left--;
-        this.count = 0;
-      }
-
-      if (this.Left < 12) {
-        this.Left = 15;
-      }
     }
   };
   this.update = function() {
-    this.x += this.speed;
-    this.speed = 0;
-    if (this.moveRight) this.speed = 5;
-    if (this.moveLeft) this.speed = -5;
+    if (!this.hitted) {
+      this.x += this.speed;
+      this.speed = 0;
+      if (this.moveRight) this.speed = 5;
+      if (this.moveLeft) this.speed = -5;
+    }
   };
   this.walls = function() {
     if (this.x < 0) this.x = 0;
@@ -255,12 +276,18 @@ function Player(x, y) {
       ) {
         //Precisa de correçao de calculos
         console.log("Tocou" + this.x + arrayBalls[i].x);
+        this.hitted = true;
+        this.lives = this.lives - 1;
+      } else {
+        this.hitted = false;
       }
     }
   };
 }
 let p1 = new Player(canvas.width / 2, gameheight - playerHeight * 2);
 let p2 = new Player(canvas.width / 2 + 10, gameheight - playerHeight * 2);
+let playerArray = [];
+playerArray.push(p1, p2);
 //ARPÃO
 let arrayHarpoons = [];
 //Carregar Imagem
@@ -314,6 +341,8 @@ function Harpoon(player, x, y) {
   };
 }
 
+let lost = false;
+
 function ArrowPressed(evt) {
   if (evt.keyCode == 68) p1.moveRight = true; //P1
   if (evt.keyCode == 65) p1.moveLeft = true; //P1
@@ -333,6 +362,16 @@ function ArrowPressed(evt) {
       let harpoonP2 = new Harpoon(p2, p2.x, p2.y);
       arrayHarpoons.push(harpoonP2);
       p2.canFire = false;
+    }
+  }
+
+  //After lost restart
+  if (lost == true) {
+    if (evt.keyCode == 82) {
+      p1.lives = 3;
+      p1.score = 0;
+      p2.lives = 3;
+      p2.score = 0;
     }
   }
 }
@@ -398,42 +437,54 @@ function ScoreBoard() {
 }
 let Animate = function() {
   //Atualizar background
-  context.drawImage(
-    background,
-    16,
-    16,
-    240,
-    176,
-    0,
-    0,
-    canvas.width,
-    gameheight
-  );
-  for (let i = 0; i < arrayBalls.length; i++) {
-    arrayBalls[i].draw();
-    arrayBalls[i].update();
-    arrayBalls[i].walls();
+  if (p1.lives > 0 && p2.lives > 0) {
+    context.drawImage(
+      background,
+      16,
+      16,
+      240,
+      176,
+      0,
+      0,
+      canvas.width,
+      gameheight
+    );
+    for (let i = 0; i < arrayBalls.length; i++) {
+      arrayBalls[i].draw();
+      arrayBalls[i].update();
+      arrayBalls[i].walls();
+    }
+
+    for (let i = 0; i < arrayHarpoons.length; i++) {
+      arrayHarpoons[i].draw();
+      arrayHarpoons[i].update();
+    }
+    for (let i = 0; i < arrayExplosion.length; i++) {
+      arrayExplosion[i].draw();
+      arrayExplosion[i].update();
+    }
+    for (let i = 0; i < playerArray.length; i++) {
+      playerArray[i].draw();
+      playerArray[i].update();
+      playerArray[i].walls();
+      playerArray[i].ballColision();
+    }
+    ScoreBoard();
+  } else {
+    context.drawImage(
+      gameover,
+      0,
+      0,
+      266,
+      200,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+    lost = true;
   }
 
-  for (let i = 0; i < arrayHarpoons.length; i++) {
-    arrayHarpoons[i].draw();
-    arrayHarpoons[i].update();
-  }
-  for (let i = 0; i < arrayExplosion.length; i++) {
-    arrayExplosion[i].draw();
-    arrayExplosion[i].update();
-  }
-  p1.draw();
-  p1.update();
-  p1.walls();
-  p2.draw();
-  p2.update();
-  p2.walls();
-  p1.ballColision();
-  p2.ballColision();
-  //p1.ballColision(); Not Working
-
-  ScoreBoard();
   window.addEventListener("keydown", ArrowPressed);
   window.addEventListener("keyup", ArrowReleased);
   window.requestAnimationFrame(Animate);
