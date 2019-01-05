@@ -21,6 +21,48 @@ let gameover = new Image();
 gameover.src = "./assets/gameover.jpg";
 let ballexploding = new Image();
 ballexploding.src = "./assets/baloons.png";
+
+//CLASSE LEVEL
+let arrayLevels = [new Level(), new Level(), new Level(),] //ARRAY PARA PERCORRER OS VARIOS LEVELS
+let currentLevelIndex = 0 // COMEÇAR COM LEVEL 1
+
+function Level(){
+  this.arrayStartBalls = [] //BOLA(S) INICIAIS DO NIVEL
+  this.arrayBalls = [] //BOLAS AO LONGO DO NIVEL
+  this.arrayObstacles = [] //TODOS OS OBSTACULOS DO NIVEL
+  this.arraySpawnX = []  //TODOS OS X INICIAIS DOS JOGADORES
+  this.arraySpawnY = []  //TODOS OS Y INICIAIS DOS JOGADORES
+  this.background //STRING DO .SRC DO BACKGROUND PARA O NIVEL
+
+  this.load = function(){
+    for(let i = 0; i<arrayPlayers.length; i++){
+      arrayPlayers[i].score = 0 // RESET AO SCORE
+      arrayPlayers[i].lives = 3 // RESET A VIDAS
+      arrayPlayers[i].x = this.arraySpawnX[i]  // X INICIAL DO PLAYER
+      arrayPlayers[i].y = this.arraySpawnY[i]  // Y INICIAL DO PLAYER
+      arrayPlayers[i].invulnFrames = 0 // REMOVER FRAMES DE INVULNERABILIDADE DO JOGO ANTERIOR
+    }
+
+    this.arrayBalls.length = 0 //RESET A BOLAS
+    for(let i = 0; i < this.arrayStartBalls.length; i++)
+    { 
+      this.arrayBalls.push(this.arrayStartBalls[i])
+    } 
+    background.src = this.background // MUDAR BACKGROUND
+  }
+}
+
+//LEVEL 1
+arrayLevels[0].arrayStartBalls = [new redBall(canvas.width / 2, canvas.height / 2, 40, 5, 5)]
+arrayLevels[0].arrayBalls = [new redBall(canvas.width / 2, canvas.height / 2, 40, 5, 5)]
+arrayLevels[0].arraySpawnX = [canvas.width/2, canvas.width/2 + 30]
+arrayLevels[0].arraySpawnY = [(gameheight -30*2), (gameheight -30*2)] //  "-30*2" É playerHeight * 2, NECESSÁRIO REMOVER NÚMEROS MÁGICOS DEPOIS
+arrayLevels[0].background = "assets/background.png"
+
+//LEVEL 2
+//*** FALTA COMPLETAR ***/
+
+
 //Array de Bolas
 let arrayBalls = [];
 let arrayExplosion = [];
@@ -121,16 +163,18 @@ function redBall(x, y, r, vx, vy) {
         this.r * 2
       );
       arrayExplosion.push(explosion);
+
       let redBall1 = new redBall(this.x + this.r, this.y, this.r * 0.5, 5, -5);
       let redBall2 = new redBall(this.x - this.r, this.y, this.r * 0.5, -5, -5);
-      arrayBalls.push(redBall1);
-      arrayBalls.push(redBall2);
+      arrayLevels[currentLevelIndex].arrayBalls.push(redBall1);
+      arrayLevels[currentLevelIndex].arrayBalls.push(redBall2);
     }
-    arrayBalls.splice(arrayBalls.indexOf(this), 1);
+
+    arrayLevels[currentLevelIndex].arrayBalls.splice(arrayLevels[currentLevelIndex].arrayBalls.indexOf(this), 1);
   };
 }
-let newredBall = new redBall(canvas.width / 2, canvas.height / 2, 40, 5, 5);
-arrayBalls.push(newredBall);
+//let newredBall = new redBall(canvas.width / 2, canvas.height / 2, 40, 5, 5);
+//arrayBalls.push(newredBall);
 
 //Fazer PANG(Jogador)
 let player = new Image();
@@ -153,11 +197,11 @@ function Player(x, y) {
   this.count = 0;
   this.lives = 3;
   this.score = 0;
-  this.hitted = false;
+  this.invulnFrames = 0; //FRAMES DE INVULNERABILIDADE
 
   this.draw = function() {
     if (this.lives > 0) {
-      if (!this.hitted) {
+      if (this.invulnFrames == 0) {
         if (!this.moveRight && !this.moveLeft) {
           if (this.facingRight) {
             context.drawImage(
@@ -258,12 +302,16 @@ function Player(x, y) {
   };
   this.update = function() {
     if (this.lives > 0) {
-      if (!this.hitted) {
+      if (this.invulnFrames == 0) {
         this.x += this.speed;
         this.speed = 0;
         if (this.moveRight) this.speed = 5;
         if (this.moveLeft) this.speed = -5;
       }
+      else{
+        this.invulnFrames --
+      }
+      
     }
   };
   this.walls = function() {
@@ -272,26 +320,25 @@ function Player(x, y) {
       this.x = canvas.width - playerWidth * 2;
   };
   this.ballColision = function() {
-    for (let i = 0; i < arrayBalls.length; i++) {
+    for (let i = 0; i < arrayLevels[currentLevelIndex].arrayBalls.length; i++) {
       if (
-        this.y <= arrayBalls[i].y + arrayBalls[i].r * 2 &&
-        arrayBalls[i].x + arrayBalls[i].r * 2 >= this.x &&
-        this.x >= arrayBalls[i].x
+        this.y <= arrayLevels[currentLevelIndex].arrayBalls[i].y + arrayLevels[currentLevelIndex].arrayBalls[i].r * 2 &&
+        arrayLevels[currentLevelIndex].arrayBalls[i].x + arrayLevels[currentLevelIndex].arrayBalls[i].r * 2 >= this.x &&
+        this.x >= arrayLevels[currentLevelIndex].arrayBalls[i].x && 
+        this.invulnFrames == 0
       ) {
         //Precisa de correçao de calculos
-        console.log("Tocou" + this.x + arrayBalls[i].x);
-        this.hitted = true;
-        this.lives = this.lives - 1;
-      } else {
-        this.hitted = false;
+        console.log("Tocou" + this.x + arrayLevels[currentLevelIndex].arrayBalls[i].x);
+        this.invulnFrames = 50 //DAR 50 FRAMES DE INVULNERABILIDADE APOS PERDER UMA VIDA
+        this.lives --;
       }
     }
   };
 }
 let p1 = new Player(canvas.width / 2, gameheight - playerHeight * 2);
-let p2 = new Player(canvas.width / 2 + 10, gameheight - playerHeight * 2);
-let playerArray = [];
-playerArray.push(p1, p2);
+let p2 = new Player(canvas.width / 2 + 30, gameheight - playerHeight * 2);
+let arrayPlayers = [];
+arrayPlayers.push(p1, p2);
 //ARPÃO
 let arrayHarpoons = [];
 //Carregar Imagem
@@ -329,15 +376,15 @@ function Harpoon(player, x, y) {
       arrayHarpoons.splice(arrayHarpoons.indexOf(this), 1);
     }
     //bolas
-    for (let i = 0; i < arrayBalls.length; i++) {
+    for (let i = 0; i < arrayLevels[currentLevelIndex].arrayBalls.length; i++) {
       if (
-        this.y <= arrayBalls[i].y + arrayBalls[i].r * 2 &&
-        arrayBalls[i].x + arrayBalls[i].r * 2 >= this.x &&
-        this.x >= arrayBalls[i].x
+        this.y <= arrayLevels[currentLevelIndex].arrayBalls[i].y + arrayLevels[currentLevelIndex].arrayBalls[i].r * 2 &&
+        arrayLevels[currentLevelIndex].arrayBalls[i].x + arrayLevels[currentLevelIndex].arrayBalls[i].r * 2 >= this.x &&
+        this.x >=arrayLevels[currentLevelIndex].arrayBalls[i].x
       ) {
         this.player.canFire = true;
         arrayHarpoons.splice(arrayHarpoons.indexOf(this), 1);
-        arrayBalls[i].pop();
+        arrayLevels[currentLevelIndex].arrayBalls[i].pop();
         this.player.score += 10;
         break;
       }
@@ -374,15 +421,13 @@ function ArrowPressed(evt) {
   }
 
   //After lost restart
-  if (lost == true) {
+  //if (lost == true) {
     if (evt.keyCode == 82) {
-      p1.lives = 3;
-      p1.score = 0;
-      p2.lives = 3;
-      p2.score = 0;
+      arrayLevels[currentLevelIndex].load()
       lost = false;
+      console.log(arrayPlayers)
     }
-  }
+ // }
 }
 
 function ArrowReleased(evt) {
@@ -410,7 +455,7 @@ function ScoreBoard() {
   //Ver Quantas casa é que tem o score do player 2 e mudar a posição conforme isso
   let length = Math.ceil(Math.log10(p2.score + 1)) + 1;
   let pos = 10;
-  console.log(length);
+  //console.log(length);
   context.fillText(
     p2.score,
     canvas.width - 100 - pos * length,
@@ -479,10 +524,10 @@ let Animate = function() {
         canvas.width,
         gameheight
       );
-      for (let i = 0; i < arrayBalls.length; i++) {
-        arrayBalls[i].draw();
-        arrayBalls[i].update();
-        arrayBalls[i].walls();
+      for (let i = 0; i < arrayLevels[currentLevelIndex].arrayBalls.length; i++) {
+        arrayLevels[currentLevelIndex].arrayBalls[i].draw();
+        arrayLevels[currentLevelIndex].arrayBalls[i].update();
+        arrayLevels[currentLevelIndex].arrayBalls[i].walls();
       }
 
       for (let i = 0; i < arrayHarpoons.length; i++) {
@@ -493,11 +538,11 @@ let Animate = function() {
         arrayExplosion[i].draw();
         arrayExplosion[i].update();
       }
-      for (let i = 0; i < playerArray.length; i++) {
-        playerArray[i].draw();
-        playerArray[i].update();
-        playerArray[i].walls();
-        playerArray[i].ballColision();
+      for (let i = 0; i < arrayPlayers.length; i++) {
+        arrayPlayers[i].draw();
+        arrayPlayers[i].update();
+        arrayPlayers[i].walls();
+        arrayPlayers[i].ballColision();
       }
       ScoreBoard();
     } else {
