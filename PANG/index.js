@@ -43,16 +43,18 @@ function Level() {
       arrayPlayers[i].invulnFrames = 0; // REMOVER FRAMES DE INVULNERABILIDADE DO JOGO ANTERIOR
     }
 
-    this.arrayStartBalls = [
-      new redBall(canvas.width / 2, canvas.height / 2, 40, 5, 5)
-    ];
-    this.arrayBalls = this.arrayStartBalls.slice(0);
-    // this.arrayBalls.length = 0 //RESET A BOLAS
-    // for(let i = 0; i < this.arrayStartBalls.length; i++)
-    // {
-    //   this.arrayBalls.push(this.arrayStartBalls[i])
-    // }
-    // background.src = this.background // MUDAR BACKGROUND
+    this.arrayBalls = []; //RESET A BOLAS
+    for (let i = 0; i < this.arrayStartBalls.length; i++) {
+      let newStartBALL = new redBall(
+        this.arrayStartBalls[i].x,
+        this.arrayStartBalls[i].y,
+        this.arrayStartBalls[i].r,
+        this.arrayStartBalls[i].vx,
+        this.arrayStartBalls[i].vy
+      );
+      this.arrayBalls.push(newStartBALL);
+    }
+    background.src = this.background; // MUDAR BACKGROUND
   };
 }
 
@@ -60,7 +62,6 @@ function Level() {
 arrayLevels[0].arrayStartBalls = [
   new redBall(canvas.width / 2, canvas.height / 2, 40, 5, 5)
 ];
-arrayLevels[0].arrayBalls = arrayLevels[0].arrayStartBalls.slice(0);
 arrayLevels[0].arraySpawnX = [canvas.width / 2, canvas.width / 2 + 30];
 arrayLevels[0].arraySpawnY = [gameheight - 30 * 2, gameheight - 30 * 2]; //  "-30*2" É playerHeight * 2, NECESSÁRIO REMOVER NÚMEROS MÁGICOS DEPOIS
 arrayLevels[0].background = "assets/background.png";
@@ -69,7 +70,6 @@ arrayLevels[0].background = "assets/background.png";
 //*** FALTA COMPLETAR ***/
 
 //Array de Bolas
-let arrayBalls = [];
 let arrayExplosion = [];
 function Explosion(x, y, width, height) {
   this.x = x;
@@ -523,23 +523,25 @@ let startmenu = function() {
     canvas.height
   );
 };
+
+arrayLevels[currentLevelIndex].load();
 let Animate = function() {
   startmenu();
 
   if (start == true) {
     //Atualizar background
     if (p1.lives > 0 || p2.lives > 0) {
-      context.drawImage(
-        background,
-        16,
-        16,
-        240,
-        176,
-        0,
-        0,
-        canvas.width,
-        gameheight
-      );
+      // context.drawImage(
+      //   background,
+      //   16,
+      //   16,
+      //   240,
+      //   176,
+      //   0,
+      //   0,
+      //   canvas.width,
+      //   gameheight
+      // );
       for (
         let i = 0;
         i < arrayLevels[currentLevelIndex].arrayBalls.length;
