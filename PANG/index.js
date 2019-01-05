@@ -531,17 +531,17 @@ let Animate = function() {
   if (start == true) {
     //Atualizar background
     if (p1.lives > 0 || p2.lives > 0) {
-      // context.drawImage(
-      //   background,
-      //   16,
-      //   16,
-      //   240,
-      //   176,
-      //   0,
-      //   0,
-      //   canvas.width,
-      //   gameheight
-      // );
+      context.drawImage(
+        background,
+        16,
+        16,
+        240,
+        176,
+        0,
+        0,
+        canvas.width,
+        gameheight
+      );
       for (
         let i = 0;
         i < arrayLevels[currentLevelIndex].arrayBalls.length;
