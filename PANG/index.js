@@ -23,6 +23,20 @@ let ballexploding = new Image();
 ballexploding.src = "./assets/baloons.png";
 let pause = false
 
+//PAUSE SCREEN
+function PauseScreen(){
+  context.font= "bold 60px Arial"
+  context.fillStyle= "rgb(200,0,0)"
+  context.textAlign = "center"
+  context.fillText("PAUSED", canvas.width / 2, canvas.height/3)
+  context.strokeText("PAUSED", canvas.width / 2, canvas.height/3)
+
+  context.font= "bold 40px Arial"
+  context.fillText("Press 'P' to unpause ", canvas.width / 2, canvas.height/3 + 50)
+  context.strokeText("Press 'P' to unpause ", canvas.width / 2, canvas.height/3 + 50)
+
+}
+
 //CLASSE LEVEL
 let arrayLevels = [new Level(), new Level(), new Level()]; //ARRAY PARA PERCORRER OS VARIOS LEVELS
 let currentLevelIndex = 0; // COMEÇAR COM LEVEL 1
@@ -456,20 +470,22 @@ function ArrowPressed(evt) {
     }
   }
 
-  //PAUSE DURING GAME
-  if (evt.keyCode == 80) {
-    if(pause == false){
-      pause = true
-      console.log("pause")
-    }
-    else if(pause == true){
-      pause = false
-      window.requestAnimationFrame(Animate);
-      console.log("unpause")
+  //PAUSE
+  if(start == true){
+    if (evt.keyCode == 80) {
+      //PAUSE DURING GAME
+      if(pause == false){
+        pause = true
+        console.log("pause")
+      }
+      //UNPAUSE
+      else if(pause == true){
+        pause = false
+        window.requestAnimationFrame(Animate);
+        console.log("unpause")
+      }
     }
   }
-
-  
 }
 
 function ArrowReleased(evt) {
@@ -618,6 +634,9 @@ let Animate = function() {
   window.addEventListener("keyup", ArrowReleased);
   if(pause == false){
     window.requestAnimationFrame(Animate);
+  }
+  else{
+    PauseScreen()
   }
   
 };
