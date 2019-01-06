@@ -590,6 +590,8 @@ function ArrowPressed(evt) {
       arrayHarpoons = []
       p1.canFire = true
       p2.canFire = true
+      p1.score = 0
+      p2.score = 0
       arrayLevels[currentLevelIndex].load();
       lost = false;
       console.log(arrayPlayers);
