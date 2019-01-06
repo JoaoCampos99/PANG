@@ -116,7 +116,7 @@ function Level() {
 
 //LEVEL 1
 arrayLevels[0].arrayStartBalls = [
-  new Ball(canvas.width / 2, canvas.height / 2, 40, 5, 5)
+  new Ball(canvas.width / 2, canvas.height / 3, 40, 5, 5)
 ];
 arrayLevels[0].arraySpawnX = [canvas.width / 4, 3*(canvas.width / 4) ];
 arrayLevels[0].arraySpawnY = [gameheight - 30 * 2, gameheight - 30 * 2]; //  "-30*2" É playerHeight * 2, NECESSÁRIO REMOVER NÚMEROS MÁGICOS DEPOIS
@@ -124,7 +124,8 @@ arrayLevels[0].background = "assets/level1.png";
 
 //LEVEL 2
 arrayLevels[1].arrayStartBalls = [
-  new Ball(canvas.width / 2, canvas.height / 2, 40, 5, 5)
+  new Ball(canvas.width / 3, canvas.height / 3, 40, -5, 5),
+  new Ball(2*(canvas.width / 3), canvas.height / 3, 40, 5, 5)
 ];
 arrayLevels[1].arraySpawnX = [canvas.width / 4, 3*(canvas.width / 4) ];
 arrayLevels[1].arraySpawnY = [gameheight - 30 * 2, gameheight - 30 * 2]; //  "-30*2" É playerHeight * 2, NECESSÁRIO REMOVER NÚMEROS MÁGICOS DEPOIS
@@ -132,7 +133,7 @@ arrayLevels[1].background = "assets/level2.png";
 
 //LEVEL 3
 arrayLevels[2].arrayStartBalls = [
-  new Ball(canvas.width / 2, canvas.height / 2, 40, 5, 5)
+  new Ball(canvas.width / 2, canvas.height / 3, 80, 5, 5)
 ];
 arrayLevels[2].arraySpawnX = [canvas.width / 4, 3*(canvas.width / 4) ];
 arrayLevels[2].arraySpawnY = [gameheight - 30 * 2, gameheight - 30 * 2]; //  "-30*2" É playerHeight * 2, NECESSÁRIO REMOVER NÚMEROS MÁGICOS DEPOIS
@@ -176,7 +177,7 @@ function Explosion(x, y, width, height) {
     }
   };
 }
-//Bola vermelha
+//CLASSE BALL
 function Ball(x, y, r, vx, vy) {
   this.x = x;
   this.y = y;
@@ -210,22 +211,20 @@ function Ball(x, y, r, vx, vy) {
 
   this.walls = function() {
     if (this.y - this.r < 0) {
-      this.vy = -this.k * this.vy;
+      this.y = this.r
+      this.vy *=  -1;
     }
     if (this.y + this.r > gameheight) {
       this.vy *= -1;
-      if (this.vy < 1) {
-        this.y = gameheight - this.r;
-      }
+      this.y = gameheight - this.r
     }
     if (this.x - this.r < 0) {
       this.vx *= -1;
-      if (Math.abs(this.vx) <= 3) {
-        this.x = this.r;
-      }
+      this.x = this.r
     }
     if (this.x + this.r > canvas.width) {
       this.vx *= -1;
+      this.x = canvas.width-this.r
     }
   };
   this.pop = function() {
