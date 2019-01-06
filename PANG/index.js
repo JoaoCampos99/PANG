@@ -588,6 +588,9 @@ function ArrowPressed(evt) {
   if (lost == true) {
     if (evt.keyCode == 82) {
       currentLevelIndex = 0;
+      arrayHarpoons = []
+      p1.canFire = true
+      p2.canFire = true
       arrayLevels[currentLevelIndex].load();
       lost = false;
       console.log(arrayPlayers);
