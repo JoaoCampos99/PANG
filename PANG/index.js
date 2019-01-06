@@ -488,13 +488,13 @@ function ArrowPressed(evt) {
   }
 
   //After lost restart
-  //if (lost == true) {
-  if (evt.keyCode == 82) {
-    arrayLevels[currentLevelIndex].load();
-    lost = false;
-    console.log(arrayPlayers);
+  if (lost == true) {
+    if (evt.keyCode == 82) {
+      arrayLevels[currentLevelIndex].load();
+      lost = false;
+      console.log(arrayPlayers);
+    }
   }
-  // }
 }
 
 function ArrowReleased(evt) {
