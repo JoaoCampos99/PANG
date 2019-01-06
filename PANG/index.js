@@ -20,42 +20,65 @@ let gameover = new Image();
 gameover.src = "./assets/gameover.jpg";
 let ballexploding = new Image();
 ballexploding.src = "./assets/baloons.png";
-let pause = false
-let ready = true
-
+let pause = false;
+let ready = true;
+let singleplayer = false;
 //PAUSE SCREEN
-function PauseScreen(){
-  context.font= "bold 60px Arial"
-  context.fillStyle= "rgb(200,0,0)"
-  context.textAlign = "center"
-  context.fillText("PAUSED", canvas.width / 2, canvas.height/3)
-  context.strokeText("PAUSED", canvas.width / 2, canvas.height/3)
+function PauseScreen() {
+  context.font = "bold 60px Arial";
+  context.fillStyle = "rgb(200,0,0)";
+  context.textAlign = "center";
+  context.fillText("PAUSED", canvas.width / 2, canvas.height / 3);
+  context.strokeText("PAUSED", canvas.width / 2, canvas.height / 3);
 
-  context.font= "bold 40px Arial"
-  context.fillText("Press 'P' to unpause ", canvas.width / 2, canvas.height/3 + 50)
-  context.strokeText("Press 'P' to unpause ", canvas.width / 2, canvas.height/3 + 50)
+  context.font = "bold 40px Arial";
+  context.fillText(
+    "Press 'P' to unpause ",
+    canvas.width / 2,
+    canvas.height / 3 + 50
+  );
+  context.strokeText(
+    "Press 'P' to unpause ",
+    canvas.width / 2,
+    canvas.height / 3 + 50
+  );
 }
 
 //READY SCREEN
-function ReadyScreen(){
-  ready = false
-  context.font= "bold 60px Arial"
-  context.fillStyle= "yellow"
-  context.textAlign = "center"
-  context.fillText("LEVEL "+(currentLevelIndex+1), canvas.width / 2, canvas.height/3)
-  context.strokeText("LEVEL "+(currentLevelIndex+1), canvas.width / 2, canvas.height/3)
+function ReadyScreen() {
+  ready = false;
+  context.font = "bold 60px Arial";
+  context.fillStyle = "yellow";
+  context.textAlign = "center";
+  context.fillText(
+    "LEVEL " + (currentLevelIndex + 1),
+    canvas.width / 2,
+    canvas.height / 3
+  );
+  context.strokeText(
+    "LEVEL " + (currentLevelIndex + 1),
+    canvas.width / 2,
+    canvas.height / 3
+  );
 
-  context.font= "bold 40px Arial"
-  context.fillText("Press any key to start", canvas.width / 2, canvas.height/3 + 50)
-  context.strokeText("Press any key to start", canvas.width / 2, canvas.height/3 + 50)
+  context.font = "bold 40px Arial";
+  context.fillText(
+    "Press any key to start",
+    canvas.width / 2,
+    canvas.height / 3 + 50
+  );
+  context.strokeText(
+    "Press any key to start",
+    canvas.width / 2,
+    canvas.height / 3 + 50
+  );
 
-  window.addEventListener("keydown", function Start(){
-    console.log("start")
-    ready = true
-    window.removeEventListener("keydown", Start)
-    Animate()
-   
-  })
+  window.addEventListener("keydown", function Start() {
+    console.log("start");
+    ready = true;
+    window.removeEventListener("keydown", Start);
+    Animate();
+  });
 }
 
 //CLASSE LEVEL
@@ -70,17 +93,11 @@ function Level() {
   this.arraySpawnY = []; //TODOS OS Y INICIAIS DOS JOGADORES
   this.background; //STRING DO .SRC DO BACKGROUND PARA O NIVEL
 
-  this.drawBG = function(){
-    let bg = new Image()
-    bg.src = this.background
-    context.drawImage(
-      bg,
-      0,
-      0,
-      canvas.width,
-      gameheight
-    )
-  }
+  this.drawBG = function() {
+    let bg = new Image();
+    bg.src = this.background;
+    context.drawImage(bg, 0, 0, canvas.width, gameheight);
+  };
 
   this.load = function() {
     for (let i = 0; i < arrayPlayers.length; i++) {
@@ -118,16 +135,16 @@ function Level() {
 arrayLevels[0].arrayStartBalls = [
   new Ball(canvas.width / 2, canvas.height / 3, 40, 5, 5)
 ];
-arrayLevels[0].arraySpawnX = [canvas.width / 4, 3*(canvas.width / 4) ];
+arrayLevels[0].arraySpawnX = [canvas.width / 4, 3 * (canvas.width / 4)];
 arrayLevels[0].arraySpawnY = [gameheight - 30 * 2, gameheight - 30 * 2]; //  "-30*2" É playerHeight * 2, NECESSÁRIO REMOVER NÚMEROS MÁGICOS DEPOIS
 arrayLevels[0].background = "assets/level1.png";
 
 //LEVEL 2
 arrayLevels[1].arrayStartBalls = [
   new Ball(canvas.width / 3, canvas.height / 3, 40, -5, 5),
-  new Ball(2*(canvas.width / 3), canvas.height / 3, 40, 5, 5)
+  new Ball(2 * (canvas.width / 3), canvas.height / 3, 40, 5, 5)
 ];
-arrayLevels[1].arraySpawnX = [canvas.width / 4, 3*(canvas.width / 4) ];
+arrayLevels[1].arraySpawnX = [canvas.width / 4, 3 * (canvas.width / 4)];
 arrayLevels[1].arraySpawnY = [gameheight - 30 * 2, gameheight - 30 * 2]; //  "-30*2" É playerHeight * 2, NECESSÁRIO REMOVER NÚMEROS MÁGICOS DEPOIS
 arrayLevels[1].background = "assets/level2.png";
 
@@ -135,7 +152,7 @@ arrayLevels[1].background = "assets/level2.png";
 arrayLevels[2].arrayStartBalls = [
   new Ball(canvas.width / 2, canvas.height / 3, 80, 5, 5)
 ];
-arrayLevels[2].arraySpawnX = [canvas.width / 4, 3*(canvas.width / 4) ];
+arrayLevels[2].arraySpawnX = [canvas.width / 4, 3 * (canvas.width / 4)];
 arrayLevels[2].arraySpawnY = [gameheight - 30 * 2, gameheight - 30 * 2]; //  "-30*2" É playerHeight * 2, NECESSÁRIO REMOVER NÚMEROS MÁGICOS DEPOIS
 arrayLevels[2].background = "assets/level3.png";
 
@@ -211,20 +228,20 @@ function Ball(x, y, r, vx, vy) {
 
   this.walls = function() {
     if (this.y - this.r < 0) {
-      this.y = this.r
-      this.vy *=  -1;
+      this.y = this.r;
+      this.vy *= -1;
     }
     if (this.y + this.r > gameheight) {
       this.vy *= -1;
-      this.y = gameheight - this.r
+      this.y = gameheight - this.r;
     }
     if (this.x - this.r < 0) {
       this.vx *= -1;
-      this.x = this.r
+      this.x = this.r;
     }
     if (this.x + this.r > canvas.width) {
       this.vx *= -1;
-      this.x = canvas.width-this.r
+      this.x = canvas.width - this.r;
     }
   };
   this.pop = function() {
@@ -248,31 +265,28 @@ function Ball(x, y, r, vx, vy) {
       1
     );
 
-    if(arrayLevels[currentLevelIndex].arrayBalls.length == 0){
-
-      arrayHarpoons = [] // RESET HARPOONS
-      for(let i = 0; i< arrayPlayers.length; i++){
-        arrayPlayers[i].canFire = true
+    if (arrayLevels[currentLevelIndex].arrayBalls.length == 0) {
+      arrayHarpoons = []; // RESET HARPOONS
+      for (let i = 0; i < arrayPlayers.length; i++) {
+        arrayPlayers[i].canFire = true;
       }
 
-      if(currentLevelIndex <= 2){
-        currentLevelIndex++
-        
+      if (currentLevelIndex <= 2) {
+        currentLevelIndex++;
+
         // context.fillStyle = "white"
         // context.fillRect(0,0, canvas.width, canvas. height)
         //background.src = arrayLevels[currentLevelIndex].background
-        arrayLevels[currentLevelIndex].load()  
-       
-        
+        arrayLevels[currentLevelIndex].load();
+
         for (
           let i = 0;
           i < arrayLevels[currentLevelIndex].arrayBalls.length;
           i++
         ) {
           arrayLevels[currentLevelIndex].arrayBalls[i].draw();
-  
         }
-        ready = false
+        ready = false;
       }
     }
   };
@@ -421,32 +435,50 @@ function Player(x, y) {
   };
   this.ballColision = function() {
     for (let i = 0; i < arrayLevels[currentLevelIndex].arrayBalls.length; i++) {
-      // if (
-      //   this.y <=
-      //     arrayLevels[currentLevelIndex].arrayBalls[i].y +
-      //       arrayLevels[currentLevelIndex].arrayBalls[i].r * 2 &&
-      //   arrayLevels[currentLevelIndex].arrayBalls[i].x +
-      //     arrayLevels[currentLevelIndex].arrayBalls[i].r * 2 >=
-      //     this.x &&
-      //   this.x >= arrayLevels[currentLevelIndex].arrayBalls[i].x &&
-      //   this.invulnFrames == 0
-      // ) {
-       
-      //console.log(arrayLevels[currentLevelIndex].arrayBalls[i].r)
-      //console.log(Math.hypot(this.x - arrayLevels[currentLevelIndex].arrayBalls[i].x , this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y))
-
-        if(this.invulnFrames == 0){
-          if(
-          arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.hypot(this.x - arrayLevels[currentLevelIndex].arrayBalls[i].x , this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y) || //  VÉRTICE TOP-LEFT
-          arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.hypot((this.x + 2*playerWidth) - arrayLevels[currentLevelIndex].arrayBalls[i].x , this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y)  ||  //  VÉRTICE TOP-RIGHT
-          arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.hypot(this.x - arrayLevels[currentLevelIndex].arrayBalls[i].x , (this.y + playerHeight*2) - arrayLevels[currentLevelIndex].arrayBalls[i].y) ||  //  VÉRTICE BOTTOM-LEFT
-          arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.hypot((this.x + 2*playerWidth) - arrayLevels[currentLevelIndex].arrayBalls[i].x , (this.y + playerHeight*2) - arrayLevels[currentLevelIndex].arrayBalls[i].y) ||  //  VÉRTICE BOTTOM-RIGHT
-          (arrayLevels[currentLevelIndex].arrayBalls[i].x > this.x && arrayLevels[currentLevelIndex].arrayBalls[i].x < this.x + playerWidth &&  arrayLevels[currentLevelIndex].arrayBalls[i].y+arrayLevels[currentLevelIndex].arrayBalls[i].r > this.y  &&  arrayLevels[currentLevelIndex].arrayBalls[i].y-arrayLevels[currentLevelIndex].arrayBalls[i].r < this.y+playerHeight*2)  // VERIFICAR SE ULTRAPASSA ALGUMA ARESTA DA HITBOX DO PLAYER
-          ){
-            this.invulnFrames = 50; //DAR 50 FRAMES DE INVULNERABILIDADE APOS PERDER UMA VIDA
-            this.lives--;
-          }
+      if (this.invulnFrames == 0) {
+        if (
+          arrayLevels[currentLevelIndex].arrayBalls[i].r >
+            Math.hypot(
+              this.x - arrayLevels[currentLevelIndex].arrayBalls[i].x,
+              this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y
+            ) || //  VÉRTICE TOP-LEFT
+          arrayLevels[currentLevelIndex].arrayBalls[i].r >
+            Math.hypot(
+              this.x +
+                2 * playerWidth -
+                arrayLevels[currentLevelIndex].arrayBalls[i].x,
+              this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y
+            ) || //  VÉRTICE TOP-RIGHT
+          arrayLevels[currentLevelIndex].arrayBalls[i].r >
+            Math.hypot(
+              this.x - arrayLevels[currentLevelIndex].arrayBalls[i].x,
+              this.y +
+                playerHeight * 2 -
+                arrayLevels[currentLevelIndex].arrayBalls[i].y
+            ) || //  VÉRTICE BOTTOM-LEFT
+          arrayLevels[currentLevelIndex].arrayBalls[i].r >
+            Math.hypot(
+              this.x +
+                2 * playerWidth -
+                arrayLevels[currentLevelIndex].arrayBalls[i].x,
+              this.y +
+                playerHeight * 2 -
+                arrayLevels[currentLevelIndex].arrayBalls[i].y
+            ) || //  VÉRTICE BOTTOM-RIGHT
+          (arrayLevels[currentLevelIndex].arrayBalls[i].x > this.x &&
+            arrayLevels[currentLevelIndex].arrayBalls[i].x <
+              this.x + playerWidth &&
+            arrayLevels[currentLevelIndex].arrayBalls[i].y +
+              arrayLevels[currentLevelIndex].arrayBalls[i].r >
+              this.y &&
+            arrayLevels[currentLevelIndex].arrayBalls[i].y -
+              arrayLevels[currentLevelIndex].arrayBalls[i].r <
+              this.y + playerHeight * 2) // VERIFICAR SE ULTRAPASSA ALGUMA ARESTA DA HITBOX DO PLAYER
+        ) {
+          this.invulnFrames = 50; //DAR 50 FRAMES DE INVULNERABILIDADE APOS PERDER UMA VIDA
+          this.lives--;
         }
+      }
     }
   };
 }
@@ -492,17 +524,25 @@ function Harpoon(player, x, y) {
     }
     //bolas
     for (let i = 0; i < arrayLevels[currentLevelIndex].arrayBalls.length; i++) {
-      if(
-      arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.hypot(this.x - arrayLevels[currentLevelIndex].arrayBalls[i].x , this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y) || // TOP-LEFT VERTICE DO HARPOON
-      arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.hypot((this.x + 16) - arrayLevels[currentLevelIndex].arrayBalls[i].x , this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y)  ||  // TOP-RIGHT VERTICE DO HARPOON
-      (arrayLevels[currentLevelIndex].arrayBalls[i].x > this.x && arrayLevels[currentLevelIndex].arrayBalls[i].x < this.x + 16 &&  arrayLevels[currentLevelIndex].arrayBalls[i].y+arrayLevels[currentLevelIndex].arrayBalls[i].r > this.y  &&  arrayLevels[currentLevelIndex].arrayBalls[i].y-arrayLevels[currentLevelIndex].arrayBalls[i].r < this.y+this.height)  // ARESTAS DA HITBOX DO HARPOON
-        // this.y <=
-        //   arrayLevels[currentLevelIndex].arrayBalls[i].y +
-        //     arrayLevels[currentLevelIndex].arrayBalls[i].r &&
-        // arrayLevels[currentLevelIndex].arrayBalls[i].x +
-        //   arrayLevels[currentLevelIndex].arrayBalls[i].r >=
-        //   this.x &&
-        // this.x >= arrayLevels[currentLevelIndex].arrayBalls[i].x
+      if (
+        arrayLevels[currentLevelIndex].arrayBalls[i].r >
+          Math.hypot(
+            this.x - arrayLevels[currentLevelIndex].arrayBalls[i].x,
+            this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y
+          ) || // TOP-LEFT VERTICE DO HARPOON
+        arrayLevels[currentLevelIndex].arrayBalls[i].r >
+          Math.hypot(
+            this.x + 16 - arrayLevels[currentLevelIndex].arrayBalls[i].x,
+            this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y
+          ) || // TOP-RIGHT VERTICE DO HARPOON
+        (arrayLevels[currentLevelIndex].arrayBalls[i].x > this.x &&
+          arrayLevels[currentLevelIndex].arrayBalls[i].x < this.x + 16 &&
+          arrayLevels[currentLevelIndex].arrayBalls[i].y +
+            arrayLevels[currentLevelIndex].arrayBalls[i].r >
+            this.y &&
+          arrayLevels[currentLevelIndex].arrayBalls[i].y -
+            arrayLevels[currentLevelIndex].arrayBalls[i].r <
+            this.y + this.height) // ARESTAS DA HITBOX DO HARPOON
       ) {
         this.player.canFire = true;
         arrayHarpoons.splice(arrayHarpoons.indexOf(this), 1);
@@ -530,14 +570,16 @@ function ArrowPressed(evt) {
     }
   }
   //Player 2 Commands
-  if (evt.keyCode == 39) p2.moveRight = true;
-  if (evt.keyCode == 37) p2.moveLeft = true;
-  if (evt.keyCode == 32) {
-    if (p2.lives > 0) {
-      if (p2.canFire) {
-        let harpoonP2 = new Harpoon(p2, p2.x, p2.y);
-        arrayHarpoons.push(harpoonP2);
-        p2.canFire = false;
+  if (!singleplayer) {
+    if (evt.keyCode == 39) p2.moveRight = true;
+    if (evt.keyCode == 37) p2.moveLeft = true;
+    if (evt.keyCode == 32) {
+      if (p2.lives > 0) {
+        if (p2.canFire) {
+          let harpoonP2 = new Harpoon(p2, p2.x, p2.y);
+          arrayHarpoons.push(harpoonP2);
+          p2.canFire = false;
+        }
       }
     }
   }
@@ -545,27 +587,27 @@ function ArrowPressed(evt) {
   //After lost restart
   if (lost == true) {
     if (evt.keyCode == 82) {
-      currentLevelIndex = 0
+      currentLevelIndex = 0;
       arrayLevels[currentLevelIndex].load();
       lost = false;
       console.log(arrayPlayers);
-      ready = false
+      ready = false;
     }
   }
 
   //PAUSE
-  if(start == true){
+  if (start == true) {
     if (evt.keyCode == 80) {
       //PAUSE DURING GAME
-      if(pause == false){
-        pause = true
-        console.log("pause")
+      if (pause == false) {
+        pause = true;
+        console.log("pause");
       }
       //UNPAUSE
-      else if(pause == true){
-        pause = false
+      else if (pause == true) {
+        pause = false;
         window.requestAnimationFrame(Animate);
-        console.log("unpause")
+        console.log("unpause");
       }
     }
   }
@@ -589,20 +631,37 @@ function ScoreBoard() {
   context.fillStyle = "white";
   context.font = "20px arial";
   context.fillText("Player 1", 10, gameheight + 30, 80);
-  context.fillText("Player 2", canvas.width - 90, gameheight + 30, 80);
   context.fillText("Score", 100, gameheight + 30, 80);
-  context.fillText("Score", canvas.width - 150, gameheight + 30, 80);
+  if (!singleplayer) {
+    context.fillText("Player 2", canvas.width - 90, gameheight + 30, 80);
+
+    context.fillText("Score", canvas.width - 150, gameheight + 30, 80);
+    //Ver Quantas casa é que tem o score do player 2 e mudar a posição conforme isso
+    let length = Math.ceil(Math.log10(p2.score + 1)) + 1;
+    let pos = 10;
+    //console.log(length);
+    context.fillText(
+      p2.score,
+      canvas.width - 100 - pos * length,
+      gameheight + 60,
+      80
+    );
+    for (let i = 0; i < p2.lives; i++) {
+      context.drawImage(
+        lifeSprite,
+        0,
+        185,
+        20,
+        20,
+        canvas.width - count * i - 30,
+        gameheight + 40,
+        30,
+        30
+      );
+    }
+  }
   context.fillText(p1.score, 100, gameheight + 60, 80);
-  //Ver Quantas casa é que tem o score do player 2 e mudar a posição conforme isso
-  let length = Math.ceil(Math.log10(p2.score + 1)) + 1;
-  let pos = 10;
-  //console.log(length);
-  context.fillText(
-    p2.score,
-    canvas.width - 100 - pos * length,
-    gameheight + 60,
-    80
-  );
+
   for (let i = 0; i < p1.lives; i++) {
     context.drawImage(
       lifeSprite,
@@ -611,19 +670,6 @@ function ScoreBoard() {
       20,
       20,
       count * i + 5,
-      gameheight + 40,
-      30,
-      30
-    );
-  }
-  for (let i = 0; i < p2.lives; i++) {
-    context.drawImage(
-      lifeSprite,
-      0,
-      185,
-      20,
-      20,
-      canvas.width - count * i - 30,
       gameheight + 40,
       30,
       30
@@ -649,7 +695,6 @@ let startmenu = function() {
   );
 };
 
-
 arrayLevels[currentLevelIndex].load();
 
 let Animate = function() {
@@ -658,15 +703,9 @@ let Animate = function() {
   if (start == true) {
     //Atualizar background
     if (p1.lives > 0 || p2.lives > 0) {
-      context.drawImage(
-        background,
-        0,
-        0,
-        canvas.width,
-        gameheight
-      );
+      context.drawImage(background, 0, 0, canvas.width, gameheight);
 
-      arrayLevels[currentLevelIndex].drawBG()
+      arrayLevels[currentLevelIndex].drawBG();
       for (
         let i = 0;
         i < arrayLevels[currentLevelIndex].arrayBalls.length;
@@ -707,31 +746,38 @@ let Animate = function() {
       lost = true;
     }
   }
-  
+
   canvas.addEventListener("mousedown", function(evt) {
     var x = evt.pageX - canvas.offsetLeft;
     var y = evt.pageY - canvas.offsetTop;
 
-    if (x >= 305 && x <= 600) {
-      if (y >= 457 && y <= 484) {
+    if (x >= 212 && x <= 692) {
+      if (y >= 423 && y <= 474) {
         start = true;
-        ready = false
+        ready = false;
+        arrayPlayers = [p1];
+        singleplayer = true;
+        p2.lives = 0;
+      }
+    }
+
+    if (x >= 226 && x <= 672) {
+      if (y >= 501 && y <= 550) {
+        start = true;
+        ready = false;
+        arrayPlayers = [p1, p2];
       }
     }
   });
-  
+
   window.addEventListener("keydown", ArrowPressed);
   window.addEventListener("keyup", ArrowReleased);
-  if(pause == false && ready == true){
+  if (pause == false && ready == true) {
     window.requestAnimationFrame(Animate);
+  } else if (pause == true) {
+    PauseScreen();
+  } else if (ready == false) {
+    ReadyScreen();
   }
-  else if(pause == true){
-    PauseScreen()
-  }
-  else if(ready == false){
-    ReadyScreen()
-  }
-  
 };
-  Animate();
-  
+Animate();
