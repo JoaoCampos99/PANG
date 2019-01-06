@@ -23,6 +23,7 @@ ballexploding.src = "./assets/baloons.png";
 let pause = false;
 let ready = true;
 let singleplayer = false;
+let end = false;
 //PAUSE SCREEN
 function PauseScreen() {
   context.font = "bold 60px Arial";
@@ -270,7 +271,7 @@ function Ball(x, y, r, vx, vy) {
         arrayPlayers[i].canFire = true;
       }
 
-      if (currentLevelIndex <= 2) {
+      if (currentLevelIndex < 2) {
         currentLevelIndex++;
 
         // context.fillStyle = "white"
@@ -286,6 +287,8 @@ function Ball(x, y, r, vx, vy) {
           arrayLevels[currentLevelIndex].arrayBalls[i].draw();
         }
         ready = false;
+      } else if (currentLevelIndex == 2) {
+        end = true;
       }
     }
   };
@@ -587,11 +590,11 @@ function ArrowPressed(evt) {
   if (lost == true) {
     if (evt.keyCode == 82) {
       currentLevelIndex = 0;
-      arrayHarpoons = []
-      p1.canFire = true
-      p2.canFire = true
-      p1.score = 0
-      p2.score = 0
+      arrayHarpoons = [];
+      p1.canFire = true;
+      p2.canFire = true;
+      p1.score = 0;
+      p2.score = 0;
       arrayLevels[currentLevelIndex].load();
       lost = false;
       console.log(arrayPlayers);
@@ -700,7 +703,12 @@ let startmenu = function() {
 };
 
 arrayLevels[currentLevelIndex].load();
+let endscreen = function() {
+  let endmenu = new Image();
+  endmenu.src = "./assets/endscreen.png";
 
+  context.drawImage(endmenu, 0, 0, canvas.width, canvas.height);
+};
 let Animate = function() {
   startmenu();
 
@@ -750,7 +758,9 @@ let Animate = function() {
       lost = true;
     }
   }
-
+  if (end) {
+    endscreen();
+  }
   canvas.addEventListener("mousedown", function(evt) {
     var x = evt.pageX - canvas.offsetLeft;
     var y = evt.pageY - canvas.offsetTop;
