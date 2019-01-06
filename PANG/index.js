@@ -101,7 +101,6 @@ function Level() {
 
   this.load = function() {
     for (let i = 0; i < arrayPlayers.length; i++) {
-      arrayPlayers[i].score = 0; // RESET AO SCORE
       arrayPlayers[i].lives = 3; // RESET A VIDAS
       arrayPlayers[i].x = this.arraySpawnX[i]; // X INICIAL DO PLAYER
       arrayPlayers[i].y = this.arraySpawnY[i]; // Y INICIAL DO PLAYER
