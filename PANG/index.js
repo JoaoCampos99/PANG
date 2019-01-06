@@ -10,7 +10,6 @@ let timer = null;
 let ballImage = new Image();
 ballImage.src = "assets/baloon1.png";
 let background = new Image();
-background.src;
 canvas = document.getElementById("myCanvas");
 context = canvas.getContext("2d");
 canvas.width = 900;
@@ -71,6 +70,18 @@ function Level() {
   this.arraySpawnY = []; //TODOS OS Y INICIAIS DOS JOGADORES
   this.background; //STRING DO .SRC DO BACKGROUND PARA O NIVEL
 
+  this.drawBG = function(){
+    let bg = new Image()
+    bg.src = this.background
+    context.drawImage(
+      bg,
+      0,
+      0,
+      canvas.width,
+      gameheight
+    )
+  }
+
   this.load = function() {
     for (let i = 0; i < arrayPlayers.length; i++) {
       arrayPlayers[i].score = 0; // RESET AO SCORE
@@ -92,6 +103,14 @@ function Level() {
       this.arrayBalls.push(newStartBALL);
     }
     background.src = this.background; // MUDAR BACKGROUND
+
+    // context.drawImage(
+    //   background,
+    //   0,
+    //   0,
+    //   canvas.width,
+    //   gameheight
+    // )
   };
 }
 
@@ -104,7 +123,20 @@ arrayLevels[0].arraySpawnY = [gameheight - 30 * 2, gameheight - 30 * 2]; //  "-3
 arrayLevels[0].background = "assets/level1.png";
 
 //LEVEL 2
-//*** FALTA COMPLETAR ***/
+arrayLevels[1].arrayStartBalls = [
+  new Ball(canvas.width / 2, canvas.height / 2, 40, 5, 5)
+];
+arrayLevels[1].arraySpawnX = [canvas.width / 4, 3*(canvas.width / 4) ];
+arrayLevels[1].arraySpawnY = [gameheight - 30 * 2, gameheight - 30 * 2]; //  "-30*2" É playerHeight * 2, NECESSÁRIO REMOVER NÚMEROS MÁGICOS DEPOIS
+arrayLevels[1].background = "assets/level2.png";
+
+//LEVEL 3
+arrayLevels[2].arrayStartBalls = [
+  new Ball(canvas.width / 2, canvas.height / 2, 40, 5, 5)
+];
+arrayLevels[2].arraySpawnX = [canvas.width / 4, 3*(canvas.width / 4) ];
+arrayLevels[2].arraySpawnY = [gameheight - 30 * 2, gameheight - 30 * 2]; //  "-30*2" É playerHeight * 2, NECESSÁRIO REMOVER NÚMEROS MÁGICOS DEPOIS
+arrayLevels[2].background = "assets/level3.png";
 
 //Array de Bolas
 let arrayExplosion = [];
@@ -216,6 +248,34 @@ function Ball(x, y, r, vx, vy) {
       arrayLevels[currentLevelIndex].arrayBalls.indexOf(this),
       1
     );
+
+    if(arrayLevels[currentLevelIndex].arrayBalls.length == 0){
+
+      arrayHarpoons = [] // RESET HARPOONS
+      for(let i = 0; i< arrayPlayers.length; i++){
+        arrayPlayers[i].canFire = true
+      }
+
+      if(currentLevelIndex <= 2){
+        currentLevelIndex++
+        
+        // context.fillStyle = "white"
+        // context.fillRect(0,0, canvas.width, canvas. height)
+        //background.src = arrayLevels[currentLevelIndex].background
+        arrayLevels[currentLevelIndex].load()  
+       
+        
+        for (
+          let i = 0;
+          i < arrayLevels[currentLevelIndex].arrayBalls.length;
+          i++
+        ) {
+          arrayLevels[currentLevelIndex].arrayBalls[i].draw();
+  
+        }
+        ready = false
+      }
+    }
   };
 }
 
@@ -486,6 +546,7 @@ function ArrowPressed(evt) {
   //After lost restart
   if (lost == true) {
     if (evt.keyCode == 82) {
+      currentLevelIndex = 0
       arrayLevels[currentLevelIndex].load();
       lost = false;
       console.log(arrayPlayers);
@@ -589,7 +650,9 @@ let startmenu = function() {
   );
 };
 
+
 arrayLevels[currentLevelIndex].load();
+
 let Animate = function() {
   startmenu();
 
@@ -603,6 +666,8 @@ let Animate = function() {
         canvas.width,
         gameheight
       );
+
+      arrayLevels[currentLevelIndex].drawBG()
       for (
         let i = 0;
         i < arrayLevels[currentLevelIndex].arrayBalls.length;
