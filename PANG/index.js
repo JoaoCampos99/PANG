@@ -601,6 +601,23 @@ function ArrowPressed(evt) {
       ready = false;
     }
   }
+  if (end == true) {
+    if (evt.keyCode == 82) {
+      currentLevelIndex = 0;
+      arrayHarpoons = [];
+      p1.canFire = true;
+      p2.canFire = true;
+      p1.score = 0;
+      p2.score = 0;
+      arrayLevels[currentLevelIndex].load();
+      console.log(arrayPlayers);
+      ready = false;
+      end = false;
+    }
+    if (evt.keyCode == 81) {
+      location.reload();
+    }
+  }
 
   //PAUSE
   if (start == true) {
