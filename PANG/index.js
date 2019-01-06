@@ -10,7 +10,7 @@ let timer = null;
 let ballImage = new Image();
 ballImage.src = "assets/baloon1.png";
 let background = new Image();
-background.src = "assets/background.png";
+background.src;
 canvas = document.getElementById("myCanvas");
 context = canvas.getContext("2d");
 canvas.width = 900;
@@ -45,7 +45,7 @@ function Level() {
 
     this.arrayBalls = []; //RESET A BOLAS
     for (let i = 0; i < this.arrayStartBalls.length; i++) {
-      let newStartBALL = new redBall(
+      let newStartBALL = new Ball(
         this.arrayStartBalls[i].x,
         this.arrayStartBalls[i].y,
         this.arrayStartBalls[i].r,
@@ -60,11 +60,11 @@ function Level() {
 
 //LEVEL 1
 arrayLevels[0].arrayStartBalls = [
-  new redBall(canvas.width / 2, canvas.height / 2, 40, 5, 5)
+  new Ball(canvas.width / 2, canvas.height / 2, 40, 5, 5)
 ];
 arrayLevels[0].arraySpawnX = [canvas.width / 2, canvas.width / 2 + 30];
 arrayLevels[0].arraySpawnY = [gameheight - 30 * 2, gameheight - 30 * 2]; //  "-30*2" É playerHeight * 2, NECESSÁRIO REMOVER NÚMEROS MÁGICOS DEPOIS
-arrayLevels[0].background = "assets/background.png";
+arrayLevels[0].background = "assets/level1.png";
 
 //LEVEL 2
 //*** FALTA COMPLETAR ***/
@@ -108,7 +108,7 @@ function Explosion(x, y, width, height) {
   };
 }
 //Bola vermelha
-function redBall(x, y, r, vx, vy) {
+function Ball(x, y, r, vx, vy) {
   this.x = x;
   this.y = y;
   this.r = r;
@@ -169,8 +169,8 @@ function redBall(x, y, r, vx, vy) {
       );
       arrayExplosion.push(explosion);
 
-      let redBall1 = new redBall(this.x + this.r, this.y, this.r * 0.5, 5, -5);
-      let redBall2 = new redBall(this.x - this.r, this.y, this.r * 0.5, -5, -5);
+      let redBall1 = new Ball(this.x + this.r, this.y, this.r * 0.5, 5, -5);
+      let redBall2 = new Ball(this.x - this.r, this.y, this.r * 0.5, -5, -5);
       arrayLevels[currentLevelIndex].arrayBalls.push(redBall1);
       arrayLevels[currentLevelIndex].arrayBalls.push(redBall2);
     }
@@ -181,8 +181,6 @@ function redBall(x, y, r, vx, vy) {
     );
   };
 }
-//let newredBall = new redBall(canvas.width / 2, canvas.height / 2, 40, 5, 5);
-//arrayBalls.push(newredBall);
 
 //Fazer PANG(Jogador)
 let player = new Image();
@@ -327,23 +325,76 @@ function Player(x, y) {
   };
   this.ballColision = function() {
     for (let i = 0; i < arrayLevels[currentLevelIndex].arrayBalls.length; i++) {
-      if (
-        this.y <=
-          arrayLevels[currentLevelIndex].arrayBalls[i].y +
-            arrayLevels[currentLevelIndex].arrayBalls[i].r * 2 &&
-        arrayLevels[currentLevelIndex].arrayBalls[i].x +
-          arrayLevels[currentLevelIndex].arrayBalls[i].r * 2 >=
-          this.x &&
-        this.x >= arrayLevels[currentLevelIndex].arrayBalls[i].x &&
-        this.invulnFrames == 0
-      ) {
-        //Precisa de correçao de calculos
-        console.log(
-          "Tocou" + this.x + arrayLevels[currentLevelIndex].arrayBalls[i].x
-        );
-        this.invulnFrames = 50; //DAR 50 FRAMES DE INVULNERABILIDADE APOS PERDER UMA VIDA
-        this.lives--;
-      }
+      // if (
+      //   this.y <=
+      //     arrayLevels[currentLevelIndex].arrayBalls[i].y +
+      //       arrayLevels[currentLevelIndex].arrayBalls[i].r * 2 &&
+      //   arrayLevels[currentLevelIndex].arrayBalls[i].x +
+      //     arrayLevels[currentLevelIndex].arrayBalls[i].r * 2 >=
+      //     this.x &&
+      //   this.x >= arrayLevels[currentLevelIndex].arrayBalls[i].x &&
+      //   this.invulnFrames == 0
+      // ) {
+       
+      //console.log(arrayLevels[currentLevelIndex].arrayBalls[i].r)
+      //console.log(Math.hypot(this.x - arrayLevels[currentLevelIndex].arrayBalls[i].x , this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y))
+      let collision = false
+      let CheckCollision = function(){
+
+         //DISTÂNCIA VERTICE -> CENTRO BOLA
+         if(arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.hypot(this.x - arrayLevels[currentLevelIndex].arrayBalls[i].x , this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y)){ //TOP LEFT PLAYER
+          collision = true
+          break;
+         }
+         else if(arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.hypot((this.x + 2*playerWidth) - arrayLevels[currentLevelIndex].arrayBalls[i].x , this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y)){ //TOP RIGHT PLAYER
+          collision = true
+         }
+         else if(arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.hypot(this.x - arrayLevels[currentLevelIndex].arrayBalls[i].x , (this.y + playerHeight*2) - arrayLevels[currentLevelIndex].arrayBalls[i].y)){ //BOTTOM LEFT PLAYER
+          collision = true
+         }
+         else if(arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.hypot((this.x + 2*playerWidth) - arrayLevels[currentLevelIndex].arrayBalls[i].x , (this.y + playerHeight*2) - arrayLevels[currentLevelIndex].arrayBalls[i].y)){ //BOTTOM RIGHT PLAYER
+          collision = true
+         }
+        
+         //DISTÂNCIA ARESTA -> CENTRO BOLA
+         else if(arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.abs((this.x - this.x)*(this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y)-(this.x - arrayLevels[currentLevelIndex].arrayBalls[i].x)*(this.y + playerHeight*2 - this.y)) / (playerHeight*2)){//ESQUERDA
+
+          collision = true
+         }
+         else if(arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.abs((this.x+2*playerWidth - this.x+2*playerWidth)*(this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y)-(this.x+2*playerWidth - arrayLevels[currentLevelIndex].arrayBalls[i].x)*(this.y + playerHeight*2 - this.y)) /(playerHeight*2)){//DIREITA
+
+          collision = true
+         }
+         else if(arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.abs((this.x+2*playerWidth - this.x)*(this.y-arrayLevels[currentLevelIndex].arrayBalls[i].y)-(this.x - arrayLevels[currentLevelIndex].arrayBalls[i].x)*(this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y)) / (playerWidth*2)){//TOPO
+
+          collision = true;
+         }
+         else if(arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.abs((this.x+2*playerWidth - this.x)*(this.y+playerHeight*2 - arrayLevels[currentLevelIndex].arrayBalls[i].y)-(this.x - arrayLevels[currentLevelIndex].arrayBalls[i].x)*(this.y+playerHeight*2 - arrayLevels[currentLevelIndex].arrayBalls[i].y)) / (playerWidth*2)){//FUNDO
+
+          collision = true
+         }
+
+         //return false;
+        }
+        //console.log(CheckCollision()) 
+        //console.log(arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.abs((this.x+2*playerWidth - this.x)*(this.y-arrayLevels[currentLevelIndex].arrayBalls[i].y)-(this.x - arrayLevels[currentLevelIndex].arrayBalls[i].x)*(this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y)) / (playerWidth*2))
+        //CheckCollision();
+        //console.log(collision)
+        if(this.invulnFrames == 0){
+          if(
+          arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.hypot(this.x - arrayLevels[currentLevelIndex].arrayBalls[i].x , this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y) || //  VÉRTICE TOP-LEFT
+          arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.hypot((this.x + 2*playerWidth) - arrayLevels[currentLevelIndex].arrayBalls[i].x , this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y)  ||  //  VÉRTICE TOP-RIGHT
+          arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.hypot(this.x - arrayLevels[currentLevelIndex].arrayBalls[i].x , (this.y + playerHeight*2) - arrayLevels[currentLevelIndex].arrayBalls[i].y) ||  //  VÉRTICE BOTTOM-LEFT
+          arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.hypot((this.x + 2*playerWidth) - arrayLevels[currentLevelIndex].arrayBalls[i].x , (this.y + playerHeight*2) - arrayLevels[currentLevelIndex].arrayBalls[i].y) ||  //  VÉRTICE BOTTOM-RIGHT
+          arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.abs((this.x - this.x)*(this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y)-(this.x - arrayLevels[currentLevelIndex].arrayBalls[i].x)*(this.y + playerHeight*2 - this.y)) / (playerHeight*2)  ||  //  ARESTA LEFT
+          arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.abs((this.x+2*playerWidth - this.x+2*playerWidth)*(this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y)-(this.x+2*playerWidth - arrayLevels[currentLevelIndex].arrayBalls[i].x)*(this.y + playerHeight*2 - this.y)) /(playerHeight*2) ||  //  ARESTA RIGHT
+          arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.abs((this.x+2*playerWidth - this.x)*(this.y-arrayLevels[currentLevelIndex].arrayBalls[i].y)-(this.x - arrayLevels[currentLevelIndex].arrayBalls[i].x)*(this.y - arrayLevels[currentLevelIndex].arrayBalls[i].y)) / (playerWidth*2)  ||  //  ARESTA TOP
+          arrayLevels[currentLevelIndex].arrayBalls[i].r > Math.abs((this.x+2*playerWidth - this.x)*(this.y+playerHeight*2 - arrayLevels[currentLevelIndex].arrayBalls[i].y)-(this.x - arrayLevels[currentLevelIndex].arrayBalls[i].x)*(this.y+playerHeight*2 - arrayLevels[currentLevelIndex].arrayBalls[i].y)) / (playerWidth*2)  //  ARESTA BOTTOM
+          ){
+            this.invulnFrames = 50; //DAR 50 FRAMES DE INVULNERABILIDADE APOS PERDER UMA VIDA
+            this.lives--;
+          }
+        }
     }
   };
 }
@@ -533,10 +584,6 @@ let Animate = function() {
     if (p1.lives > 0 || p2.lives > 0) {
       context.drawImage(
         background,
-        16,
-        16,
-        240,
-        176,
         0,
         0,
         canvas.width,
