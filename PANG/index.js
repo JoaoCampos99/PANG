@@ -489,6 +489,7 @@ function ArrowPressed(evt) {
       arrayLevels[currentLevelIndex].load();
       lost = false;
       console.log(arrayPlayers);
+      ready = false
     }
   }
 
