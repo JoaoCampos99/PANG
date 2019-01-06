@@ -22,6 +22,7 @@ gameover.src = "./assets/gameover.jpg";
 let ballexploding = new Image();
 ballexploding.src = "./assets/baloons.png";
 let pause = false
+let ready = true
 
 //PAUSE SCREEN
 function PauseScreen(){
@@ -34,7 +35,28 @@ function PauseScreen(){
   context.font= "bold 40px Arial"
   context.fillText("Press 'P' to unpause ", canvas.width / 2, canvas.height/3 + 50)
   context.strokeText("Press 'P' to unpause ", canvas.width / 2, canvas.height/3 + 50)
+}
 
+//READY SCREEN
+function ReadyScreen(){
+  ready = false
+  context.font= "bold 60px Arial"
+  context.fillStyle= "yellow"
+  context.textAlign = "center"
+  context.fillText("LEVEL "+(currentLevelIndex+1), canvas.width / 2, canvas.height/3)
+  context.strokeText("LEVEL "+(currentLevelIndex+1), canvas.width / 2, canvas.height/3)
+
+  context.font= "bold 40px Arial"
+  context.fillText("Press any key to start", canvas.width / 2, canvas.height/3 + 50)
+  context.strokeText("Press any key to start", canvas.width / 2, canvas.height/3 + 50)
+
+  window.addEventListener("keydown", function Start(){
+    console.log("start")
+    ready = true
+    window.removeEventListener("keydown", Start)
+    Animate()
+   
+  })
 }
 
 //CLASSE LEVEL
@@ -467,7 +489,6 @@ function ArrowPressed(evt) {
       arrayLevels[currentLevelIndex].load();
       lost = false;
       console.log(arrayPlayers);
-    }
   }
 
   //PAUSE
@@ -620,6 +641,7 @@ let Animate = function() {
       lost = true;
     }
   }
+  
   canvas.addEventListener("mousedown", function(evt) {
     var x = evt.pageX - canvas.offsetLeft;
     var y = evt.pageY - canvas.offsetTop;
@@ -627,17 +649,23 @@ let Animate = function() {
     if (x >= 305 && x <= 600) {
       if (y >= 457 && y <= 484) {
         start = true;
+        ready = false
       }
     }
   });
+  
   window.addEventListener("keydown", ArrowPressed);
   window.addEventListener("keyup", ArrowReleased);
-  if(pause == false){
+  if(pause == false && ready == true){
     window.requestAnimationFrame(Animate);
   }
-  else{
+  else if(pause == true){
     PauseScreen()
+  }
+  else if(ready == false){
+    ReadyScreen()
   }
   
 };
   Animate();
+  
