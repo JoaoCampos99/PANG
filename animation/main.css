@@ -1,0 +1,51 @@
+#firstSvg {
+  width: 900px;
+  height: 600px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin-top: 300px;
+  margin-left: 580px;
+  margin-bottom: 200px;
+  transform-origin: 50% 50%;
+}
+#firstSvg image {
+  animation: pang-moving 4s forwards;
+}
+#secondSvg {
+  width: 900px;
+  height: 600px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin-top: 0px;
+  margin-left: 580px;
+  margin-right: 700px;
+  margin-bottom: 200px;
+  opacity: 0;
+  animation-delay: 4s;
+  animation: background-coming-down 3s forwards;
+}
+
+@keyframes pang-moving {
+  to {
+    transform: translateX(640px);
+  }
+}
+@keyframes background-coming-down {
+  0% {
+    opacity: 0;
+  }
+  95% {
+    opacity: 1;
+    margin-top: 300px;
+  }
+  100% {
+    margin-top: 300px;
+    opacity: 1;
+  }
+}
