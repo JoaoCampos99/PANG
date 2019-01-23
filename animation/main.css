@@ -11,8 +11,65 @@
   margin-bottom: 200px;
   transform-origin: 50% 50%;
 }
-#firstSvg image {
-  animation: pang-moving 4s forwards;
+#P {
+  fill: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin-top: 0px;
+  margin-left: 750px;
+  margin-bottom: 200px;
+  width: 1000px;
+  height: 1000px;
+  opacity: 0;
+  animation: letter-going-down 1s forwards;
+}
+#A {
+  fill: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin-top: 0px;
+  margin-left: 900px;
+  margin-bottom: 200px;
+  width: 1000px;
+  height: 1000px;
+  opacity: 0;
+  animation: letter-going-down 1s forwards;
+}
+#N {
+  fill: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin-top: 0px;
+  margin-left: 1050px;
+  margin-bottom: 200px;
+  width: 1000px;
+  height: 1000px;
+  opacity: 0;
+  animation: letter-going-down 1s forwards;
+}
+#G {
+  fill: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin-top: 0px;
+  margin-left: 1175px;
+  margin-bottom: 200px;
+  width: 1000px;
+  height: 1000px;
+  opacity: 0;
+  animation: letter-going-down 1s forwards;
 }
 #secondSvg {
   width: 900px;
@@ -27,15 +84,24 @@
   margin-right: 700px;
   margin-bottom: 200px;
   opacity: 0;
-  animation-delay: 4s;
+  animation-delay: 7s;
   animation: background-coming-down 3s forwards;
 }
 
-@keyframes pang-moving {
-  to {
-    transform: translateX(640px);
+@keyframes letter-going-down {
+  0% {
+    opacity: 0;
+  }
+  95% {
+    opacity: 1;
+    margin-top: 800px;
+  }
+  100% {
+    opacity: 1;
+    margin-top: 800px;
   }
 }
+
 @keyframes background-coming-down {
   0% {
     opacity: 0;
