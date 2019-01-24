@@ -11,20 +11,8 @@
   margin-bottom: 200px;
   transform-origin: 50% 50%;
 }
-#firstSvg image {
-  animation: move-pang 10s;
-}
-#thirdSVG {
-  width: 900px;
-  height: 600px;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin-top: 300px;
-  margin-left: 580px;
-  margin-bottom: 200px;
+#firstSvg image{
+  animation: move-pang 10s 
 }
 #P {
   fill: none;
@@ -39,9 +27,9 @@
   width: 1000px;
   height: 1000px;
   opacity: 0;
-  transform: matrix(1, 0, 0, 1, 250.45698924731198, 267.01075268817164);
   animation: letter-going-down 1s forwards;
   animation-delay: 1s;
+
 }
 #A {
   fill: none;
@@ -58,6 +46,7 @@
   opacity: 0;
   animation: letter-going-down 1s forwards;
   animation-delay: 2.3s;
+
 }
 #N {
   fill: none;
@@ -74,6 +63,7 @@
   opacity: 0;
   animation: letter-going-down 1s forwards;
   animation-delay: 4s;
+
 }
 #G {
   fill: none;
@@ -90,6 +80,7 @@
   opacity: 0;
   animation: letter-going-down 1s forwards;
   animation-delay: 6s;
+
 }
 #secondSvg {
   width: 900px;
@@ -106,28 +97,14 @@
   opacity: 0;
   animation: background-coming-down 3s forwards;
   animation-delay: 7s;
+
 }
 /* 00315a */
-@keyframes move-pang {
-  0% {
-    transform: matrix(
-      2.2259615384615405,
-      0,
-      0,
-      2.2259615384615405,
-      -1.1368683772161603e-13,
-      564.3173076923076
-    );
-  }
-  100% {
-    transform: matrix(
-      2.2259615384615405,
-      0,
-      0,
-      2.2259615384615405,
-      595.6877315549887,
-      564.3173076923076
-    );
+@keyframes move-pang{
+  0%{
+    transform:matrix(2.2259615384615405,0,0,2.2259615384615405,-1.1368683772161603e-13,564.3173076923076)
+  }100%{
+    transform:matrix(2.2259615384615405,0,0,2.2259615384615405,595.6877315549887,564.3173076923076)
   }
 }
 
